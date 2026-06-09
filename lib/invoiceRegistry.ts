@@ -20,6 +20,7 @@ import {
   InvoiceStatus,
   StablecoinSymbol,
 } from "@/lib/types";
+import { getWalletProvider } from "@/lib/wallet";
 
 const registry = process.env
   .NEXT_PUBLIC_INVOICE_REGISTRY_ADDRESS as `0x${string}` | undefined;
@@ -68,13 +69,14 @@ export async function registerInvoiceOnchain({
   invoice: InvoiceDraft;
   recipient: `0x${string}`;
 }) {
-  if (!registry || !window.ethereum) {
+  const provider = getWalletProvider();
+  if (!registry || !provider) {
     throw new Error("Payflow registry or wallet is unavailable.");
   }
-  await ensureCelo();
+  await ensureCelo(provider);
   const walletClient = createWalletClient({
     chain: celo,
-    transport: custom(window.ethereum),
+    transport: custom(provider),
   });
   const accounts = await walletClient.getAddresses();
   const account = accounts[0] ?? (await walletClient.requestAddresses())[0];

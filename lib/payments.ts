@@ -11,6 +11,7 @@ import {
 } from "@/lib/celo";
 import { StablecoinSymbol } from "@/lib/types";
 import { ensureCelo, publicClient } from "@/lib/chain";
+import { getWalletProvider } from "@/lib/wallet";
 
 export async function payStablecoinInvoice({
   invoiceKey,
@@ -23,13 +24,14 @@ export async function payStablecoinInvoice({
 }) {
   const router = process.env
     .NEXT_PUBLIC_PAYMENT_ROUTER_ADDRESS as `0x${string}` | undefined;
-  if (!window.ethereum || !router) {
+  const provider = getWalletProvider();
+  if (!provider || !router) {
     throw new Error("Open this request inside MiniPay or a wallet browser.");
   }
-  await ensureCelo();
+  await ensureCelo(provider);
   const walletClient = createWalletClient({
     chain: celo,
-    transport: custom(window.ethereum),
+    transport: custom(provider),
   });
   const accounts = await walletClient.getAddresses();
   const account = accounts[0] ?? (await walletClient.requestAddresses())[0];

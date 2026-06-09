@@ -11,6 +11,7 @@ import {
   FileCheck2,
   LoaderCircle,
   Plus,
+  QrCode,
   ShieldCheck,
   Sparkles,
   Wallet,
@@ -60,6 +61,9 @@ export default function Home() {
   const {
     address,
     connect,
+    connectInjected,
+    connectWalletConnect,
+    hasInjectedWallet,
     isMiniPay,
     isLoading: walletLoading,
     error: walletError,
@@ -70,6 +74,7 @@ export default function Home() {
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
   const [selected, setSelected] = useState<Invoice | null>(null);
   const [showAgentSetup, setShowAgentSetup] = useState(false);
+  const [showWalletOptions, setShowWalletOptions] = useState(false);
   const [agentName, setAgentName] = useState("My Payflow Agent");
   const [reminderDays, setReminderDays] = useState(3);
   const [automationEnabled, setAutomationEnabled] = useState(true);
@@ -231,7 +236,13 @@ export default function Home() {
         </Link>
         <button
           className="wallet-button"
-          onClick={connect}
+          onClick={() => {
+            if (isMiniPay) {
+              void connect();
+            } else {
+              setShowWalletOptions(true);
+            }
+          }}
           disabled={walletLoading || Boolean(address)}
         >
           {walletLoading ? (
@@ -525,6 +536,64 @@ export default function Home() {
               )}
               {isRegistering ? "Waiting for Celo..." : "Sign and create invoice"}
             </button>
+          </section>
+        </div>
+      )}
+
+      {showWalletOptions && !address && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={() => setShowWalletOptions(false)}
+        >
+          <section
+            className="modal wallet-modal"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setShowWalletOptions(false)}
+            >
+              <X size={18} />
+            </button>
+            <span className="modal-icon">
+              <Wallet size={20} />
+            </span>
+            <span className="section-kicker">CONNECT WALLET</span>
+            <h2>Choose how to connect</h2>
+            <p>
+              Use an installed browser wallet or pair any WalletConnect-compatible
+              mobile wallet.
+            </p>
+            <div className="wallet-options">
+              {hasInjectedWallet && (
+                <button
+                  className="wallet-option"
+                  onClick={async () => {
+                    await connectInjected();
+                    setShowWalletOptions(false);
+                  }}
+                >
+                  <Wallet size={20} />
+                  <span>
+                    <strong>Browser wallet</strong>
+                    MetaMask, Valora, Coinbase Wallet, or another extension
+                  </span>
+                </button>
+              )}
+              <button
+                className="wallet-option"
+                onClick={async () => {
+                  await connectWalletConnect();
+                  setShowWalletOptions(false);
+                }}
+              >
+                <QrCode size={20} />
+                <span>
+                  <strong>WalletConnect</strong>
+                  Scan a QR code or open your wallet on mobile
+                </span>
+              </button>
+            </div>
           </section>
         </div>
       )}

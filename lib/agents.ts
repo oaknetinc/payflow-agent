@@ -3,6 +3,7 @@ import { celo } from "viem/chains";
 import { ensureCelo, publicClient } from "@/lib/chain";
 import { agentFactoryAbi, payflowAgentAbi, stablecoins } from "@/lib/celo";
 import { UserAgent } from "@/lib/types";
+import { getWalletProvider } from "@/lib/wallet";
 
 const factory = process.env
   .NEXT_PUBLIC_AGENT_FACTORY_ADDRESS as `0x${string}` | undefined;
@@ -55,13 +56,14 @@ export async function createUserAgent(
   name: string,
   reminderDays: number,
 ) {
-  if (!factory || !window.ethereum) {
+  const provider = getWalletProvider();
+  if (!factory || !provider) {
     throw new Error("Agent factory or wallet is unavailable.");
   }
-  await ensureCelo();
+  await ensureCelo(provider);
   const walletClient = createWalletClient({
     chain: celo,
-    transport: custom(window.ethereum),
+    transport: custom(provider),
   });
   const hash = await walletClient.writeContract({
     account: owner,
@@ -84,11 +86,12 @@ export async function updateUserAgent(
   reminderDays: number,
   automationEnabled: boolean,
 ) {
-  if (!window.ethereum) throw new Error("Wallet is unavailable.");
-  await ensureCelo();
+  const provider = getWalletProvider();
+  if (!provider) throw new Error("Wallet is unavailable.");
+  await ensureCelo(provider);
   const walletClient = createWalletClient({
     chain: celo,
-    transport: custom(window.ethereum),
+    transport: custom(provider),
   });
   const hash = await walletClient.writeContract({
     account: owner,

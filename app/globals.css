@@ -797,6 +797,47 @@ footer a:hover {
   text-decoration: none;
 }
 
+.wallet-modal {
+  width: min(470px, 100%);
+}
+
+.wallet-options {
+  display: grid;
+  gap: 11px;
+}
+
+.wallet-option {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.wallet-option:hover {
+  border-color: var(--green-2);
+  background: #f5faf3;
+}
+
+.wallet-option span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.wallet-option strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
 .invoice-modal {
   width: min(460px, 100%);
 }
