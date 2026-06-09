@@ -53,4 +53,53 @@ export const invoiceRegistryAbi = [
     ],
     outputs: [],
   },
+  {
+    name: "invoices",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "invoiceId", type: "bytes32" }],
+    outputs: [
+      { name: "issuer", type: "address" },
+      { name: "recipient", type: "address" },
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "createdAt", type: "uint64" },
+      { name: "dueAt", type: "uint64" },
+      { name: "metadataHash", type: "bytes32" },
+      { name: "status", type: "uint8" },
+    ],
+  },
+  {
+    name: "markPaid",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "invoiceId", type: "bytes32" },
+      { name: "paymentTxReference", type: "bytes32" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "InvoiceCreated",
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "invoiceId", type: "bytes32", indexed: true },
+      { name: "issuer", type: "address", indexed: true },
+      { name: "recipient", type: "address", indexed: true },
+      { name: "token", type: "address", indexed: false },
+      { name: "amount", type: "uint256", indexed: false },
+      { name: "dueAt", type: "uint64", indexed: false },
+      { name: "metadataHash", type: "bytes32", indexed: false },
+    ],
+  },
+  {
+    name: "InvoicePaid",
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "invoiceId", type: "bytes32", indexed: true },
+      { name: "paymentTxReference", type: "bytes32", indexed: false },
+    ],
+  },
 ] as const;

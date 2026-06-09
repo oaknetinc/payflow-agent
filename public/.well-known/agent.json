@@ -1,11 +1,15 @@
 {
   "name": "Payflow Agent",
   "description": "Creates stablecoin invoices, monitors Celo payments, and follows up on outstanding freelance work.",
-  "url": "https://REPLACE_WITH_DEPLOYMENT_URL",
+  "url": "https://payflow-agent.vercel.app",
   "version": "0.1.0",
   "capabilities": {
     "streaming": false,
     "pushNotifications": false
+  },
+  "provider": {
+    "organization": "Payflow",
+    "url": "https://github.com/oaknetinc/payflow-agent"
   },
   "skills": [
     {

@@ -2,6 +2,8 @@
 pragma solidity ^0.8.24;
 
 contract PayflowInvoiceRegistry {
+    address public immutable agentOperator;
+
     enum Status {
         Pending,
         Paid,
@@ -13,6 +15,7 @@ contract PayflowInvoiceRegistry {
         address recipient;
         address token;
         uint256 amount;
+        uint64 createdAt;
         uint64 dueAt;
         bytes32 metadataHash;
         Status status;
@@ -32,6 +35,10 @@ contract PayflowInvoiceRegistry {
     event InvoicePaid(bytes32 indexed invoiceId, bytes32 paymentTxReference);
     event InvoiceCancelled(bytes32 indexed invoiceId);
 
+    constructor() {
+        agentOperator = msg.sender;
+    }
+
     function createInvoice(
         bytes32 invoiceId,
         address recipient,
@@ -49,6 +56,7 @@ contract PayflowInvoiceRegistry {
             recipient: recipient,
             token: token,
             amount: amount,
+            createdAt: uint64(block.timestamp),
             dueAt: dueAt,
             metadataHash: metadataHash,
             status: Status.Pending
@@ -67,7 +75,10 @@ contract PayflowInvoiceRegistry {
 
     function markPaid(bytes32 invoiceId, bytes32 paymentTxReference) external {
         Invoice storage invoice = invoices[invoiceId];
-        require(invoice.issuer == msg.sender, "Only issuer");
+        require(
+            invoice.issuer == msg.sender || agentOperator == msg.sender,
+            "Only issuer or agent"
+        );
         require(invoice.status == Status.Pending, "Not pending");
         invoice.status = Status.Paid;
         emit InvoicePaid(invoiceId, paymentTxReference);

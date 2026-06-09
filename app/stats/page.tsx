@@ -4,7 +4,7 @@ const metrics = [
   ["Stablecoin volume", "$0"],
   ["Unique payers", "0"],
   ["Failed payment rate", "0%"],
-  ["Agent reputation", "Pending registration"],
+  ["ERC-8004 agent", "#9229"],
 ];
 
 export default function StatsPage() {
@@ -25,7 +25,8 @@ export default function StatsPage() {
         ))}
       </section>
       <p className="stats-note">
-        Network: Celo · Supported stablecoins: USDC, USDT, USDm
+        Network: Celo · Supported stablecoins: USDC, USDT, USDm ·{" "}
+        <a href="https://8004scan.io/agents/celo/9229">View agent profile</a>
       </p>
     </main>
   );

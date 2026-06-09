@@ -274,8 +274,8 @@ export default function Home() {
           </article>
           <article className="stat-card">
             <span>Agent reputation</span>
-            <strong>Ready</strong>
-            <small>ERC-8004 registration pending</small>
+            <strong>#9229</strong>
+            <small>Registered on ERC-8004</small>
           </article>
         </div>
 
@@ -326,8 +326,8 @@ export default function Home() {
         <div>
           <ShieldCheck size={20} />
           <span>
-            <strong>Agent identity ready</strong>
-            ERC-8004 registration prepared
+            <strong>Verified agent identity</strong>
+            ERC-8004 agent #9229
           </span>
         </div>
         <div>
