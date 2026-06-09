@@ -11,65 +11,104 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { payStablecoin } from "@/lib/payments";
-import { StablecoinSymbol } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { payStablecoinInvoice } from "@/lib/payments";
+import { Invoice } from "@/lib/types";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { useStablecoinBalances } from "@/hooks/useStablecoinBalances";
+import { loadInvoice } from "@/lib/invoiceRegistry";
 
 export function PaymentCheckout() {
   const params = useSearchParams();
-  const { address, connect, isMiniPay, isLoading } = useMiniPay();
+  const invoiceKey = params.get("id") as `0x${string}` | null;
+  const validInvoiceKey = Boolean(
+    invoiceKey && /^0x[a-fA-F0-9]{64}$/.test(invoiceKey),
+  );
+  const { address, connect, isMiniPay, isLoading, error: walletError } =
+    useMiniPay();
   const { balances, preferred, isLoading: balancesLoading } =
     useStablecoinBalances(address);
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [status, setStatus] = useState<
-    "idle" | "paying" | "confirmed" | "error"
-  >("idle");
-  const [message, setMessage] = useState("");
+    "loading" | "idle" | "paying" | "confirmed" | "error"
+  >(validInvoiceKey ? "loading" : "error");
+  const [message, setMessage] = useState(
+    validInvoiceKey ? "" : "This payment link is invalid.",
+  );
 
-  const invoice = {
-    id: params.get("id") ?? "INV-DEMO",
-    client: params.get("client") ?? "Payflow client",
-    description: params.get("description") ?? "Freelance services",
-    amount: params.get("amount") ?? "150",
-    currency: (params.get("currency") ?? "USDC") as StablecoinSymbol,
-    due: params.get("due") ?? "Today",
-    recipient:
-      params.get("recipient") ??
-      process.env.NEXT_PUBLIC_PAYFLOW_RECIPIENT ??
-      "",
-  };
+  useEffect(() => {
+    if (!invoiceKey || !validInvoiceKey) return;
+    void loadInvoice(invoiceKey)
+      .then((value) => {
+        setInvoice(value);
+        setStatus("idle");
+      })
+      .catch((cause) => {
+        setMessage(cause instanceof Error ? cause.message : "Invoice unavailable.");
+        setStatus("error");
+      });
+  }, [invoiceKey, validInvoiceKey]);
 
   async function pay() {
+    if (!invoice) return;
     if (!address) {
       await connect();
+      return;
+    }
+    if (invoice.status === "paid") {
+      setMessage("This invoice has already been paid.");
+      setStatus("error");
+      return;
+    }
+    if (invoice.status === "cancelled") {
+      setMessage("This invoice was cancelled.");
+      setStatus("error");
       return;
     }
 
     setStatus("paying");
     setMessage("");
     try {
-      if (!/^0x[a-fA-F0-9]{40}$/.test(invoice.recipient)) {
-        throw new Error(
-          "This invoice is missing a valid recipient. Ask the freelancer for a new payment link.",
-        );
-      }
-      if (balances[invoice.currency] < Number(invoice.amount)) {
+      if (balances[invoice.currency] < invoice.amount) {
         window.location.href =
           "https://link.minipay.xyz/add_cash?tokens=USDm,USDC,USDT";
         return;
       }
-      const { hash } = await payStablecoin({
-        amount: invoice.amount,
+      const { hash } = await payStablecoinInvoice({
+        invoiceKey: invoice.key,
+        amount: String(invoice.amount),
         currency: invoice.currency,
-        recipient: invoice.recipient as `0x${string}`,
       });
-      setMessage(`${hash.slice(0, 10)}...${hash.slice(-8)}`);
+      setMessage(hash);
       setStatus("confirmed");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Payment failed");
+    } catch (cause) {
+      setMessage(cause instanceof Error ? cause.message : "Payment failed.");
       setStatus("error");
     }
+  }
+
+  if (status === "loading") {
+    return (
+      <main className="checkout-shell">
+        <div className="checkout-loading">
+          <LoaderCircle className="spin" size={24} /> Loading onchain invoice
+        </div>
+      </main>
+    );
+  }
+
+  if (!invoice) {
+    return (
+      <main className="checkout-shell">
+        <section className="checkout-card checkout-error-card">
+          <h1>Invoice unavailable</h1>
+          <p>{message}</p>
+          <Link className="primary-button" href="/">
+            Back to Payflow
+          </Link>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -79,7 +118,7 @@ export function PaymentCheckout() {
           <ArrowLeft size={17} /> Back
         </Link>
         <span>
-          <LockKeyhole size={13} /> Secure Celo checkout
+          <LockKeyhole size={13} /> Verified Celo invoice
         </span>
       </nav>
 
@@ -96,9 +135,15 @@ export function PaymentCheckout() {
             <span>
               <Check size={28} />
             </span>
-            <h1>Payment sent</h1>
-            <p>Your stablecoin transfer was submitted to Celo.</p>
-            <code>{message}</code>
+            <h1>Payment confirmed</h1>
+            <p>The stablecoin transfer was confirmed on Celo.</p>
+            <a
+              href={`https://celo.blockscout.com/tx/${message}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View transaction
+            </a>
             <Link className="primary-button" href="/">
               Done
             </Link>
@@ -106,7 +151,7 @@ export function PaymentCheckout() {
         ) : (
           <>
             <div className="checkout-title">
-              <span>Invoice from Samuel O.</span>
+              <span>Invoice from {invoice.issuer.slice(0, 8)}…</span>
               <h1>
                 {invoice.currency === "USDm" ? "USDm " : "$"}
                 {invoice.amount}
@@ -114,8 +159,8 @@ export function PaymentCheckout() {
               <p>{invoice.currency} on Celo</p>
               {address && preferred !== invoice.currency && (
                 <small className="preferred-note">
-                  Your largest balance is {preferred}. This request specifically
-                  accepts {invoice.currency}.
+                  Your largest balance is {preferred}. This invoice requires{" "}
+                  {invoice.currency}.
                 </small>
               )}
             </div>
@@ -135,7 +180,7 @@ export function PaymentCheckout() {
               </div>
               <div>
                 <span>Due</span>
-                <strong>{invoice.due}</strong>
+                <strong>{invoice.dueDate}</strong>
               </div>
             </div>
 
@@ -144,30 +189,44 @@ export function PaymentCheckout() {
                 <Wallet size={18} />
                 <span>
                   <strong>MiniPay-ready</strong>
-                  Open this link inside MiniPay to pay with stablecoins.
+                  Open this verified request inside MiniPay to pay.
                 </span>
               </div>
             )}
 
-            {status === "error" && <p className="payment-error">{message}</p>}
+            {(status === "error" || walletError) && (
+              <p className="payment-error">{message || walletError}</p>
+            )}
 
             <button
               className="primary-button"
               onClick={pay}
-              disabled={isLoading || balancesLoading || status === "paying"}
+              disabled={
+                isLoading ||
+                balancesLoading ||
+                status === "paying" ||
+                invoice.status === "paid" ||
+                invoice.status === "cancelled"
+              }
             >
               {isLoading || balancesLoading || status === "paying" ? (
                 <LoaderCircle className="spin" size={18} />
+              ) : invoice.status === "paid" ? (
+                <Check size={17} />
               ) : (
                 <Wallet size={17} />
               )}
-              {address ? `Pay ${invoice.amount} ${invoice.currency}` : "Connect to pay"}
+              {invoice.status === "paid"
+                ? "Already paid"
+                : address
+                  ? `Pay ${invoice.amount} ${invoice.currency}`
+                  : "Connect to pay"}
             </button>
 
             <div className="checkout-security">
               <ShieldCheck size={15} />
-              Payment settles directly to the freelancer. Payflow never holds
-              your funds.
+              Amount, token, recipient, and status were loaded from the verified
+              Payflow registry. Funds settle directly to the issuer.
             </div>
           </>
         )}

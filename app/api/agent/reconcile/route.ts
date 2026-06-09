@@ -7,7 +7,11 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { celo } from "viem/chains";
-import { invoiceRegistryAbi } from "@/lib/celo";
+import {
+  agentFactoryAbi,
+  invoiceRegistryAbi,
+  payflowAgentAbi,
+} from "@/lib/celo";
 
 export const maxDuration = 60;
 
@@ -29,7 +33,9 @@ async function reconcile() {
     | `0x${string}`
     | undefined;
   const deploymentBlock = BigInt(process.env.REGISTRY_DEPLOYMENT_BLOCK ?? "0");
-  if (!registry || !privateKey || deploymentBlock === BigInt(0)) {
+  const factory = process.env
+    .NEXT_PUBLIC_AGENT_FACTORY_ADDRESS as `0x${string}` | undefined;
+  if (!registry || !factory || !privateKey || deploymentBlock === BigInt(0)) {
     throw new Error("Agent reconciliation is not configured");
   }
 
@@ -60,6 +66,7 @@ async function reconcile() {
   );
 
   const reconciled: string[] = [];
+  const reminded: string[] = [];
   for (const event of created) {
     const invoiceId = event.args.invoiceId;
     if (!invoiceId || !event.blockNumber) continue;
@@ -69,7 +76,17 @@ async function reconcile() {
       functionName: "invoices",
       args: [invoiceId],
     });
-    const [, recipient, token, amount, , , , status] = invoice;
+    const [
+      issuer,
+      recipient,
+      token,
+      amount,
+      createdAt,
+      ,
+      lastReminderAt,
+      ,
+      status,
+    ] = invoice;
     if (status !== 0) continue;
 
     const payments = await publicClient.getLogs({
@@ -86,24 +103,62 @@ async function reconcile() {
         Boolean(log.transactionHash) &&
         !usedPaymentHashes.has(log.transactionHash),
     );
-    if (!payment?.transactionHash) continue;
+    if (payment?.transactionHash) {
+      const hash = await walletClient.writeContract({
+        address: registry,
+        abi: invoiceRegistryAbi,
+        functionName: "markPaid",
+        args: [invoiceId, payment.transactionHash],
+        gasPrice: await publicClient.getGasPrice(),
+        type: "legacy",
+      });
+      await publicClient.waitForTransactionReceipt({ hash });
+      usedPaymentHashes.add(payment.transactionHash);
+      reconciled.push(invoiceId);
+      continue;
+    }
 
+    const agent = await publicClient.readContract({
+      address: factory,
+      abi: agentFactoryAbi,
+      functionName: "agentOf",
+      args: [issuer],
+    });
+    if (agent === "0x0000000000000000000000000000000000000000") continue;
+    const [delay, enabled] = await Promise.all([
+      publicClient.readContract({
+        address: agent,
+        abi: payflowAgentAbi,
+        functionName: "reminderDelay",
+      }),
+      publicClient.readContract({
+        address: agent,
+        abi: payflowAgentAbi,
+        functionName: "automationEnabled",
+      }),
+    ]);
+    const now = BigInt(Math.floor(Date.now() / 1000));
+    const reminderBase =
+      lastReminderAt === BigInt(0) ? createdAt : lastReminderAt;
+    if (!enabled || now < reminderBase + BigInt(delay)) continue;
     const hash = await walletClient.writeContract({
       address: registry,
       abi: invoiceRegistryAbi,
-      functionName: "markPaid",
-      args: [invoiceId, payment.transactionHash],
+      functionName: "recordReminder",
+      args: [invoiceId],
       gasPrice: await publicClient.getGasPrice(),
+      type: "legacy",
     });
     await publicClient.waitForTransactionReceipt({ hash });
-    usedPaymentHashes.add(payment.transactionHash);
-    reconciled.push(invoiceId);
+    reminded.push(invoiceId);
   }
 
   return {
     checked: created.length,
     reconciled: reconciled.length,
+    reminded: reminded.length,
     invoiceIds: reconciled,
+    remindedInvoiceIds: reminded,
   };
 }
 

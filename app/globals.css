@@ -245,6 +245,64 @@ button {
   margin: 0 auto;
 }
 
+.agent-console {
+  margin-bottom: 14px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 18px;
+}
+
+.agent-console h2 {
+  margin: 6px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.agent-console p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.agent-console .secondary-button {
+  flex: 0 0 auto;
+}
+
+.empty-state {
+  min-height: 190px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--muted);
+  text-align: center;
+  border: 1px dashed #c9d4ca;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 18px;
+}
+
+.empty-state strong {
+  color: var(--ink);
+}
+
+.empty-state span {
+  font-size: 12px;
+}
+
+.inline-error {
+  color: #9c3c34 !important;
+  font-size: 12px !important;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -421,6 +479,11 @@ button {
 .status-overdue {
   color: #9c3c34;
   background: #f9ded9;
+}
+
+.status-cancelled {
+  color: #59645e;
+  background: #e7ebe8;
 }
 
 .row-chevron {
@@ -686,6 +749,26 @@ footer a:hover {
   border-color: var(--green-2);
 }
 
+.draft-card .agent-toggle {
+  min-height: 45px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  font-size: 13px;
+  text-transform: none;
+}
+
+.draft-card .agent-toggle input {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+}
+
 .primary-button {
   width: 100%;
   min-height: 50px;
@@ -699,6 +782,19 @@ footer a:hover {
   background: var(--green);
   border-radius: 13px;
   font-weight: 800;
+}
+
+.secondary-button:disabled,
+.primary-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.explorer-link {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 10px;
+  text-decoration: none;
 }
 
 .invoice-modal {
@@ -1046,6 +1142,15 @@ footer a:hover {
 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .agent-console {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .agent-console .secondary-button {
+    width: 100%;
   }
 
   .stat-card {

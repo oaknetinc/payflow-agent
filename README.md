@@ -8,13 +8,14 @@ Production: https://payflow-agent.vercel.app
 
 ## What It Does
 
-- Natural-language invoice parsing
+- Natural-language invoice parsing with a review step
 - Shareable stablecoin payment requests
 - MiniPay wallet detection and zero-click connection
 - USDC, USDT, and USDm payments with fee-currency support
-- Confirmed-receipt payment handling
+- Invoice-bound payment routing and confirmed receipts
 - Verified Celo mainnet invoice registry
-- Autonomous payment reconciliation by the Payflow agent
+- Wallet-owned user agent contracts
+- Delegated payment reconciliation and auditable reminders
 - ERC-8004 identity and A2A agent discovery
 
 ## Run Locally
@@ -30,7 +31,7 @@ Open `http://localhost:3000`.
 ## Celo Mainnet
 
 Verified invoice registry:
-[`0x572Db341b810D7981ADF73F50707084AF70568c0`](https://celo.blockscout.com/address/0x572Db341b810D7981ADF73F50707084AF70568c0)
+[`0x45946685A9392cc1263e30D711E4954B7E50B3c6`](https://celo.blockscout.com/address/0x45946685A9392cc1263e30D711E4954B7E50B3c6)
 
 ERC-8004 identity:
 [#9229 on 8004scan](https://8004scan.io/agents/celo/9229)
@@ -42,6 +43,8 @@ transaction, and agent registration details are in
 ## Project Structure
 
 - Registry contract: `contracts/PayflowInvoiceRegistry.sol`
+- User agent contracts: `contracts/PayflowAgent.sol`
+- Payment router: `contracts/PayflowPaymentRouter.sol`
 - Autonomous reconciler: `app/api/agent/reconcile/route.ts`
 - Agent metadata: `agent/metadata.json`
 - A2A card: `public/.well-known/agent.json`

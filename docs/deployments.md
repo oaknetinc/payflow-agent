@@ -1,41 +1,53 @@
 # Payflow Deployments
 
-## Celo Mainnet
+## Production Release
 
-- Chain ID: `42220`
-- Payflow Invoice Registry:
-  [`0x572Db341b810D7981ADF73F50707084AF70568c0`](https://celo.blockscout.com/address/0x572Db341b810D7981ADF73F50707084AF70568c0)
-- Deployment transaction:
-  [`0x6c12a1f5e4e804debca0da39cee6a7ac61bb23296aa6d997422bf19519692e6e`](https://celo.blockscout.com/tx/0x6c12a1f5e4e804debca0da39cee6a7ac61bb23296aa6d997422bf19519692e6e)
-- Deployment block: `69113706`
-- Deployer and payment receiver:
+- Network: Celo mainnet (`42220`)
+- Deployment block: `69132420`
+- Agent factory:
+  [`0xE36B6B19951B27B1Bc49c2D791c051E1FB961665`](https://celo.blockscout.com/address/0xE36B6B19951B27B1Bc49c2D791c051E1FB961665)
+- Invoice registry:
+  [`0x45946685A9392cc1263e30D711E4954B7E50B3c6`](https://celo.blockscout.com/address/0x45946685A9392cc1263e30D711E4954B7E50B3c6)
+- Payment router:
+  [`0x51eF5f848DBbA3BF7AAf683A64BCc0591cb6f3ec`](https://celo.blockscout.com/address/0x51eF5f848DBbA3BF7AAf683A64BCc0591cb6f3ec)
+
+All production contract sources are verified on Celo Blockscout.
+
+### User-Owned Agent Proof
+
+- Agent:
+  [`0xA224e364201b114C3AEFe94Ec12e655aA7cbb636`](https://celo.blockscout.com/address/0xA224e364201b114C3AEFe94Ec12e655aA7cbb636)
+- Owner:
   `0x84A768E1Bb51C57C5d9E8617fBFAA7eCCB44139d`
+- Creation transaction:
+  [`0x4f45974115ef8dbcbda0acf08a15e63b2cf53d1de65797109468eb22fb375868`](https://celo.blockscout.com/tx/0x4f45974115ef8dbcbda0acf08a15e63b2cf53d1de65797109468eb22fb375868)
 
-The registry source is verified on Celo Blockscout. Its immutable agent
-operator can reconcile confirmed stablecoin transfers while invoice issuers
-retain direct control over cancellation and payment updates.
+The owner can change or disable automation. The operator can only reconcile
+invoices and record reminders; it cannot transfer owner funds.
 
-The first registry deployment at
-[`0xd904097e802D0fb8d8B065262FFdDb1eF6879F76`](https://celo.blockscout.com/address/0xd904097e802D0fb8d8B065262FFdDb1eF6879F76)
-is verified but superseded.
+### Secure Payment Proof
 
-## ERC-8004 Agent
+- Invoice creation:
+  [`0xc6cf5dda4585a50a0ae2880fa1629679d53803e3cba4dcb9aef2e601a4a835da`](https://celo.blockscout.com/tx/0xc6cf5dda4585a50a0ae2880fa1629679d53803e3cba4dcb9aef2e601a4a835da)
+- Exact USDC approval:
+  [`0x50d428dae1830214052d52e4f72afe283636ba72ea8d6e01e67a2b58df73226d`](https://celo.blockscout.com/tx/0x50d428dae1830214052d52e4f72afe283636ba72ea8d6e01e67a2b58df73226d)
+- Invoice-bound payment:
+  [`0x4102832a9a6e5f8d0777c331badb1719c450acc612f9bd4b67a980c02245232c`](https://celo.blockscout.com/tx/0x4102832a9a6e5f8d0777c331badb1719c450acc612f9bd4b67a980c02245232c)
+
+The router reads the invoice amount, token, recipient, and pending status from
+the registry. It transfers the exact amount and marks that invoice paid
+atomically.
+
+## ERC-8004 Identity
 
 - Agent ID: `9229`
 - Profile: https://8004scan.io/agents/celo/9229
 - Registration transaction:
   [`0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80`](https://celo.blockscout.com/tx/0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80)
 
-## Autonomous Reconciliation Proof
+## Superseded Registries
 
-The production agent completed an end-to-end mainnet test using a `0.01 USDC`
-invoice:
+- `0x572Db341b810D7981ADF73F50707084AF70568c0`
+- `0xd904097e802D0fb8d8B065262FFdDb1eF6879F76`
 
-- Invoice creation:
-  [`0xdef958342570c91d31f7a5278a892be8418f1ac905e9adcb8238141561c4592f`](https://celo.blockscout.com/tx/0xdef958342570c91d31f7a5278a892be8418f1ac905e9adcb8238141561c4592f)
-- Confirmed USDC transfer:
-  [`0xa15a11a249b126d0b47abbdf056bbd6b994150870e1031bcdff83d06c8de3807`](https://celo.blockscout.com/tx/0xa15a11a249b126d0b47abbdf056bbd6b994150870e1031bcdff83d06c8de3807)
-- Agent reconciliation:
-  [`0x66e6574616b321a6832d94c794fcb2e38b0a9fe18e7f149ba8ddd13c07dd4950`](https://celo.blockscout.com/tx/0x66e6574616b321a6832d94c794fcb2e38b0a9fe18e7f149ba8ddd13c07dd4950)
-
-The `InvoicePaid` event stores the USDC transfer hash as its payment reference.
+Both remain verified historical deployments but are not used by production.

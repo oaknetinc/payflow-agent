@@ -13,7 +13,7 @@ function parseDraft(prompt: string): InvoiceDraft {
   const amountMatch = prompt.match(
     /(?:\$|usd(?:c|m)?\s*)?(\d+(?:,\d{3})*(?:\.\d{1,2})?)/i,
   );
-  const currencyMatch = prompt.match(/\b(USDC|USDm)\b/i);
+  const currencyMatch = prompt.match(/\b(USDC|USDT|USDm)\b/i);
   const clientMatch = prompt.match(
     /(?:invoice|bill)\s+(.+?)(?=\s+(?:\$|\d|for\b))/i,
   );
@@ -27,10 +27,14 @@ function parseDraft(prompt: string): InvoiceDraft {
 
   return {
     client: titleCase(clientMatch?.[1] ?? "New client"),
-    email: "",
     description: titleCase(descriptionMatch?.[1] ?? "Freelance services"),
     amount: Number((amountMatch?.[1] ?? "100").replaceAll(",", "")),
-    currency: currency.toLowerCase() === "usdm" ? "USDm" : "USDC",
+    currency:
+      currency.toLowerCase() === "usdm"
+        ? "USDm"
+        : currency.toLowerCase() === "usdt"
+          ? "USDT"
+          : "USDC",
     dueDate: titleCase(dueMatch?.[1] ?? "In 7 days"),
   };
 }

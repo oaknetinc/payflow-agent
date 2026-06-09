@@ -1,4 +1,5 @@
 export const CELO_CHAIN_ID = 42220;
+export const CELO_CHAIN_HEX = "0xa4ec";
 
 export const stablecoins = {
   USDC: {
@@ -36,6 +37,36 @@ export const erc20TransferAbi = [
     ],
     outputs: [{ name: "", type: "bool" }],
   },
+  {
+    name: "allowance",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "owner", type: "address" },
+      { name: "spender", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "approve",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "spender", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+] as const;
+
+export const paymentRouterAbi = [
+  {
+    name: "payInvoice",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "invoiceId", type: "bytes32" }],
+    outputs: [],
+  },
 ] as const;
 
 export const invoiceRegistryAbi = [
@@ -49,7 +80,7 @@ export const invoiceRegistryAbi = [
       { name: "token", type: "address" },
       { name: "amount", type: "uint256" },
       { name: "dueAt", type: "uint64" },
-      { name: "metadataHash", type: "bytes32" },
+      { name: "metadata", type: "string" },
     ],
     outputs: [],
   },
@@ -65,8 +96,10 @@ export const invoiceRegistryAbi = [
       { name: "amount", type: "uint256" },
       { name: "createdAt", type: "uint64" },
       { name: "dueAt", type: "uint64" },
-      { name: "metadataHash", type: "bytes32" },
+      { name: "lastReminderAt", type: "uint64" },
+      { name: "paymentTxReference", type: "bytes32" },
       { name: "status", type: "uint8" },
+      { name: "metadata", type: "string" },
     ],
   },
   {
@@ -80,6 +113,13 @@ export const invoiceRegistryAbi = [
     outputs: [],
   },
   {
+    name: "recordReminder",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "invoiceId", type: "bytes32" }],
+    outputs: [],
+  },
+  {
     name: "InvoiceCreated",
     type: "event",
     anonymous: false,
@@ -90,7 +130,7 @@ export const invoiceRegistryAbi = [
       { name: "token", type: "address", indexed: false },
       { name: "amount", type: "uint256", indexed: false },
       { name: "dueAt", type: "uint64", indexed: false },
-      { name: "metadataHash", type: "bytes32", indexed: false },
+      { name: "metadata", type: "string", indexed: false },
     ],
   },
   {
@@ -103,3 +143,72 @@ export const invoiceRegistryAbi = [
     ],
   },
 ] as const;
+
+export const agentFactoryAbi = [
+  {
+    name: "createAgent",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "name", type: "string" },
+      { name: "reminderDelay", type: "uint32" },
+    ],
+    outputs: [{ name: "agent", type: "address" }],
+  },
+  {
+    name: "agentOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "owner", type: "address" }],
+    outputs: [{ name: "agent", type: "address" }],
+  },
+] as const;
+
+export const payflowAgentAbi = [
+  {
+    name: "name",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "operator",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    name: "reminderDelay",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint32" }],
+  },
+  {
+    name: "automationEnabled",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "update",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "name", type: "string" },
+      { name: "operator", type: "address" },
+      { name: "reminderDelay", type: "uint32" },
+      { name: "automationEnabled", type: "bool" },
+    ],
+    outputs: [],
+  },
+] as const;
+
+export function getStablecoinByAddress(address: string) {
+  return Object.entries(stablecoins).find(
+    ([, token]) => token.address.toLowerCase() === address.toLowerCase(),
+  );
+}

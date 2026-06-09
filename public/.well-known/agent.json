@@ -21,6 +21,16 @@
       "id": "monitor-payment",
       "name": "Monitor payment",
       "description": "Watch an invoice address and confirm settlement on Celo."
+    },
+    {
+      "id": "create-user-agent",
+      "name": "Create user agent",
+      "description": "Deploy a wallet-owned Payflow agent with revocable invoice automation."
+    },
+    {
+      "id": "record-reminder",
+      "name": "Record reminder",
+      "description": "Record auditable follow-up activity for an outstanding invoice."
     }
   ]
 }

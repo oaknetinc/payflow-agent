@@ -1,32 +1,67 @@
-const metrics = [
-  ["Invoices created", "0"],
-  ["Payments confirmed", "0"],
-  ["Stablecoin volume", "$0"],
-  ["Unique payers", "0"],
-  ["Failed payment rate", "0%"],
-  ["ERC-8004 agent", "#9229"],
-];
+"use client";
+
+import { useEffect, useState } from "react";
+
+type Stats = {
+  invoicesCreated: number;
+  paymentsConfirmed: number;
+  confirmedVolume: number;
+  activeIssuers: number;
+};
 
 export default function StatsPage() {
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    void fetch("/api/stats")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Stats are temporarily unavailable.");
+        setStats((await response.json()) as Stats);
+      })
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : "Could not load stats."),
+      );
+  }, []);
+
+  const metrics = stats
+    ? [
+        ["Invoices created", String(stats.invoicesCreated)],
+        ["Payments confirmed", String(stats.paymentsConfirmed)],
+        [
+          "Confirmed volume",
+          `USD ${stats.confirmedVolume.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}`,
+        ],
+        ["Active issuers", String(stats.activeIssuers)],
+        ["Network", "Celo"],
+        ["ERC-8004 identity", "#9229"],
+      ]
+    : [];
+
   return (
     <main className="stats-shell">
       <span className="section-kicker">PUBLIC OPERATIONS</span>
       <h1>Payflow stats</h1>
-      <p>
-        Transparent usage and onchain payment metrics. Values will populate
-        from the deployed Celo registry at launch.
-      </p>
-      <section className="public-stats-grid">
-        {metrics.map(([label, value]) => (
-          <article key={label}>
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </article>
-        ))}
-      </section>
+      <p>Live metrics reconstructed from the production Celo registry.</p>
+      {error ? (
+        <p className="inline-error">{error}</p>
+      ) : !stats ? (
+        <p>Loading Celo activity…</p>
+      ) : (
+        <section className="public-stats-grid">
+          {metrics.map(([label, value]) => (
+            <article key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </article>
+          ))}
+        </section>
+      )}
       <p className="stats-note">
-        Network: Celo · Supported stablecoins: USDC, USDT, USDm ·{" "}
-        <a href="https://8004scan.io/agents/celo/9229">View agent profile</a>
+        Supported stablecoins: USDC, USDT, USDm ·{" "}
+        <a href="https://8004scan.io/agents/celo/9229">View agent identity</a>
       </p>
     </main>
   );

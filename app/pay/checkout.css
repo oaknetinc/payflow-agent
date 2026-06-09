@@ -34,6 +34,30 @@
   box-shadow: 0 25px 70px rgba(21, 61, 47, 0.12);
 }
 
+.checkout-loading {
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.checkout-error-card {
+  text-align: center;
+}
+
+.checkout-error-card h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 500;
+}
+
+.checkout-error-card p {
+  margin-bottom: 24px;
+  color: var(--muted);
+}
+
 .checkout-title {
   margin: 42px 0 30px;
   text-align: center;
@@ -166,6 +190,12 @@
   margin-bottom: 24px;
   color: var(--green-2);
   font-size: 11px;
+}
+
+.checkout-success a:not(.primary-button) {
+  margin-bottom: 22px;
+  color: var(--green-2);
+  font-size: 12px;
 }
 
 @media (max-width: 720px) {
