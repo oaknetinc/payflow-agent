@@ -219,7 +219,7 @@ export default function Home() {
       <section className="hero">
         <div className="eyebrow">
           <Sparkles size={14} />
-          Your onchain accounts assistant
+          Demo workspace · onchain accounts assistant
         </div>
         <h1>Get paid without the chase.</h1>
         <p>
@@ -274,8 +274,8 @@ export default function Home() {
           </article>
           <article className="stat-card">
             <span>Agent reputation</span>
-            <strong>92</strong>
-            <small>ERC-8004 score</small>
+            <strong>Ready</strong>
+            <small>ERC-8004 registration pending</small>
           </article>
         </div>
 
@@ -326,15 +326,15 @@ export default function Home() {
         <div>
           <ShieldCheck size={20} />
           <span>
-            <strong>Verified agent</strong>
-            ERC-8004 identity
+            <strong>Agent identity ready</strong>
+            ERC-8004 registration prepared
           </span>
         </div>
         <div>
           <CircleDollarSign size={20} />
           <span>
             <strong>Stablecoin native</strong>
-            USDC and USDm on Celo
+            USDC, USDT and USDm on Celo
           </span>
         </div>
         <div>
