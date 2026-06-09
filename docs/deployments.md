@@ -25,3 +25,17 @@ is verified but superseded.
 - Profile: https://8004scan.io/agents/celo/9229
 - Registration transaction:
   [`0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80`](https://celo.blockscout.com/tx/0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80)
+
+## Autonomous Reconciliation Proof
+
+The production agent completed an end-to-end mainnet test using a `0.01 USDC`
+invoice:
+
+- Invoice creation:
+  [`0xdef958342570c91d31f7a5278a892be8418f1ac905e9adcb8238141561c4592f`](https://celo.blockscout.com/tx/0xdef958342570c91d31f7a5278a892be8418f1ac905e9adcb8238141561c4592f)
+- Confirmed USDC transfer:
+  [`0xa15a11a249b126d0b47abbdf056bbd6b994150870e1031bcdff83d06c8de3807`](https://celo.blockscout.com/tx/0xa15a11a249b126d0b47abbdf056bbd6b994150870e1031bcdff83d06c8de3807)
+- Agent reconciliation:
+  [`0x66e6574616b321a6832d94c794fcb2e38b0a9fe18e7f149ba8ddd13c07dd4950`](https://celo.blockscout.com/tx/0x66e6574616b321a6832d94c794fcb2e38b0a9fe18e7f149ba8ddd13c07dd4950)
+
+The `InvoicePaid` event stores the USDC transfer hash as its payment reference.
