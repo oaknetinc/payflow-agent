@@ -1,0 +1,18 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Payflow Agent",
+  "description": "An onchain invoicing and payment follow-up agent for global freelancers using Celo stablecoins.",
+  "image": "ipfs://REPLACE_WITH_PAYFLOW_LOGO_CID",
+  "services": [
+    {
+      "name": "web",
+      "endpoint": "https://REPLACE_WITH_DEPLOYMENT_URL"
+    },
+    {
+      "name": "A2A",
+      "endpoint": "https://REPLACE_WITH_DEPLOYMENT_URL/.well-known/agent.json",
+      "version": "1.0"
+    }
+  ],
+  "supportedTrust": ["reputation", "validation"]
+}

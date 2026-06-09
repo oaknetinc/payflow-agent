@@ -1,0 +1,22 @@
+{
+  "name": "Payflow Agent",
+  "description": "Creates stablecoin invoices, monitors Celo payments, and follows up on outstanding freelance work.",
+  "url": "https://REPLACE_WITH_DEPLOYMENT_URL",
+  "version": "0.1.0",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "skills": [
+    {
+      "id": "create-invoice",
+      "name": "Create invoice",
+      "description": "Turn a natural-language request into a Celo stablecoin invoice."
+    },
+    {
+      "id": "monitor-payment",
+      "name": "Monitor payment",
+      "description": "Watch an invoice address and confirm settlement on Celo."
+    }
+  ]
+}

@@ -1,4 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Payflow Agent
+
+Payflow is an onchain accounts-receivable agent for global freelancers. It
+turns a sentence into a stablecoin invoice, shares a payment request, monitors
+Celo for settlement, and builds an ERC-8004 reputation trail.
+
+## Current prototype
+
+- Natural-language invoice parsing
+- Responsive freelancer dashboard
+- MiniPay detection and wallet auto-connect
+- USDC and USDm payment configuration for Celo
+- Solidity invoice registry foundation
+- ERC-8004-compatible agent metadata
+- A2A agent card
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Celo configuration
+
+Copy `.env.example` to `.env.local` after deploying the invoice registry and
+registering the agent. The stablecoin and fee-currency addresses live in
+`lib/celo.ts`.
+
+## Next milestones
+
+1. Deploy `contracts/PayflowInvoiceRegistry.sol` to Celo Sepolia.
+2. Persist invoices and generate public `/pay/[invoiceId]` pages.
+3. Execute stablecoin transfers in MiniPay.
+4. Monitor receipts and mark invoices paid.
+5. Pin `agent/metadata.json` to IPFS and register the ERC-8004 agent.
 
 ## Getting Started
 

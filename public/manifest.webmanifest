@@ -1,0 +1,16 @@
+{
+  "name": "Payflow Agent",
+  "short_name": "Payflow",
+  "description": "Stablecoin invoices and payment follow-up for global freelancers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f3",
+  "theme_color": "#153d2f",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
