@@ -56,7 +56,11 @@ export function useMiniPay() {
     setError("");
     try {
       const provider = await createWalletConnectProvider();
-      await provider.request({ method: "eth_requestAccounts" });
+      if (provider.connect) {
+        await provider.connect();
+      } else {
+        await provider.request({ method: "eth_requestAccounts" });
+      }
       await bindProvider(provider, "walletconnect");
     } catch (cause) {
       setError(
