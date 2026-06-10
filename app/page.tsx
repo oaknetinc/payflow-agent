@@ -204,7 +204,13 @@ export default function Home() {
       setShowAgentSetup(false);
       showToast("Your wallet-owned Payflow Agent is live.");
     } catch (cause) {
-      showToast(cause instanceof Error ? cause.message : "Could not create agent.");
+      const message =
+        cause instanceof Error ? cause.message : "Could not create agent.";
+      if (message.includes("already owns agent")) {
+        await refresh();
+        setShowAgentSetup(false);
+      }
+      showToast(message);
     } finally {
       setIsRegistering(false);
     }

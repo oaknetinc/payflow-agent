@@ -1,7 +1,7 @@
 import { createWalletClient, custom } from "viem";
 import { celo } from "viem/chains";
 import { ensureCelo, publicClient } from "@/lib/chain";
-import { agentFactoryAbi, payflowAgentAbi, stablecoins } from "@/lib/celo";
+import { agentFactoryAbi, payflowAgentAbi } from "@/lib/celo";
 import { UserAgent } from "@/lib/types";
 import { getWalletProvider } from "@/lib/wallet";
 
@@ -60,6 +60,12 @@ export async function createUserAgent(
   if (!factory || !provider) {
     throw new Error("Agent factory or wallet is unavailable.");
   }
+  const existing = await loadUserAgent(owner);
+  if (existing) {
+    throw new Error(
+      `This wallet already owns agent ${existing.address.slice(0, 8)}…`,
+    );
+  }
   await ensureCelo(provider);
   const walletClient = createWalletClient({
     chain: celo,
@@ -71,7 +77,6 @@ export async function createUserAgent(
     abi: agentFactoryAbi,
     functionName: "createAgent",
     args: [name, reminderDays * 86400],
-    feeCurrency: stablecoins.USDC.feeCurrency,
     type: "legacy",
   });
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
@@ -104,7 +109,6 @@ export async function updateUserAgent(
       reminderDays * 86400,
       automationEnabled,
     ],
-    feeCurrency: stablecoins.USDC.feeCurrency,
     type: "legacy",
   });
   const receipt = await publicClient.waitForTransactionReceipt({ hash });
