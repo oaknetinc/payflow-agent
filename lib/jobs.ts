@@ -235,34 +235,63 @@ export function parseJobMetadata(value: string): JobMetadata {
   }
 }
 
-function normalizeJob(id: number, value: readonly unknown[]): PayflowJob {
-  const token = value[4] as `0x${string}`;
+function jobField(
+  value: readonly unknown[] | Record<string, unknown>,
+  index: number,
+  name: string,
+) {
+  return Array.isArray(value)
+    ? value[index]
+    : (value as Record<string, unknown>)[name];
+}
+
+function normalizeJob(
+  id: number,
+  value: readonly unknown[] | Record<string, unknown>,
+): PayflowJob {
+  const token = jobField(value, 4, "token") as `0x${string}`;
   const tokenEntry = getStablecoinByAddress(token);
   const currency = (tokenEntry?.[0] ?? "USDC") as StablecoinSymbol;
   const decimals = tokenEntry?.[1].decimals ?? 6;
-  const metadataURI = value[16] as string;
+  const metadataURI = jobField(value, 16, "metadataURI") as string;
   const metadata = parseJobMetadata(metadataURI);
   return {
     id,
-    requester: value[0] as `0x${string}`,
-    requesterAgent: value[1] as `0x${string}`,
-    worker: value[2] as `0x${string}`,
-    workerAgent: value[3] as `0x${string}`,
+    requester: jobField(value, 0, "requester") as `0x${string}`,
+    requesterAgent: jobField(value, 1, "requesterAgent") as `0x${string}`,
+    worker: jobField(value, 2, "worker") as `0x${string}`,
+    workerAgent: jobField(value, 3, "workerAgent") as `0x${string}`,
     token,
-    verifier: value[5] as `0x${string}`,
-    resolver: value[6] as `0x${string}`,
-    rewardRaw: value[7] as bigint,
-    reward: Number(formatUnits(value[7] as bigint, decimals)),
-    acceptanceDeadline: Number(value[8]),
-    workDeadline: Number(value[9]),
-    reviewPeriod: Number(value[10]),
-    submittedAt: Number(value[11]),
-    verification: Number(value[12]) === 1 ? "invoice" : "requester",
-    status: statusNames[Number(value[13])] ?? "posted",
-    specificationHash: value[14] as `0x${string}`,
-    deliverableHash: value[15] as `0x${string}`,
+    verifier: jobField(value, 5, "verifier") as `0x${string}`,
+    resolver: jobField(value, 6, "resolver") as `0x${string}`,
+    rewardRaw: jobField(value, 7, "reward") as bigint,
+    reward: Number(
+      formatUnits(jobField(value, 7, "reward") as bigint, decimals),
+    ),
+    acceptanceDeadline: Number(
+      jobField(value, 8, "acceptanceDeadline"),
+    ),
+    workDeadline: Number(jobField(value, 9, "workDeadline")),
+    reviewPeriod: Number(jobField(value, 10, "reviewPeriod")),
+    submittedAt: Number(jobField(value, 11, "submittedAt")),
+    verification:
+      Number(jobField(value, 12, "verificationMode")) === 1
+        ? "invoice"
+        : "requester",
+    status:
+      statusNames[Number(jobField(value, 13, "status"))] ?? "posted",
+    specificationHash: jobField(
+      value,
+      14,
+      "specificationHash",
+    ) as `0x${string}`,
+    deliverableHash: jobField(
+      value,
+      15,
+      "deliverableHash",
+    ) as `0x${string}`,
     metadataURI,
-    deliverableURI: value[17] as string,
+    deliverableURI: jobField(value, 17, "deliverableURI") as string,
     metadata: { ...metadata, currency },
   };
 }
@@ -283,7 +312,10 @@ export async function loadJobs(): Promise<PayflowJob[]> {
         functionName: "getJob",
         args: [BigInt(id)],
       });
-      return normalizeJob(id, value as unknown as readonly unknown[]);
+      return normalizeJob(
+        id,
+        value as unknown as readonly unknown[] | Record<string, unknown>,
+      );
     }),
   );
   return records.sort((a, b) => b.id - a.id);
