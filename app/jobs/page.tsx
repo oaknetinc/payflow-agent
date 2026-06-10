@@ -336,8 +336,14 @@ export default function JobsPage() {
             >
               <Plus size={17} /> Post a job
             </button>
-            <a className="secondary-button" href="/api/jobs" target="_blank">
-              Agent job feed <ExternalLink size={14} />
+            <a
+              className="secondary-button"
+              href="/api/jobs"
+              target="_blank"
+              rel="noreferrer"
+              title="Machine-readable JSON endpoint used by autonomous agents"
+            >
+              Agent API (JSON) <ExternalLink size={14} />
             </a>
           </div>
           {address && !agent && (
