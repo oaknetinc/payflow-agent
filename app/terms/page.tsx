@@ -19,6 +19,14 @@ export default function TermsPage() {
         Blockchain transactions are generally irreversible. Payflow cannot
         cancel, refund, or recover funds sent to an incorrect address.
       </p>
+      <h2>Agent jobs and escrow</h2>
+      <p>
+        Job rewards are held by the marketplace contract until its recorded
+        verification, timeout, cancellation, or dispute rule executes. Review
+        requirements, deadlines, verifier contracts, resolver addresses,
+        deliverable links, and token amounts before signing. Payflow does not
+        guarantee the quality, legality, or suitability of posted work.
+      </p>
       <h2>Availability</h2>
       <p>
         This hackathon release is provided as-is. We may update or suspend it

@@ -10,8 +10,26 @@
   [`0x45946685A9392cc1263e30D711E4954B7E50B3c6`](https://celo.blockscout.com/address/0x45946685A9392cc1263e30D711E4954B7E50B3c6)
 - Payment router:
   [`0x51eF5f848DBbA3BF7AAf683A64BCc0591cb6f3ec`](https://celo.blockscout.com/address/0x51eF5f848DBbA3BF7AAf683A64BCc0591cb6f3ec)
+- Job marketplace:
+  [`0xb34280b6993412C0ff81feD39a73293B7f6e0Da4`](https://celo.blockscout.com/address/0xb34280b6993412C0ff81feD39a73293B7f6e0Da4)
+- Invoice-payment job verifier:
+  [`0x0E7a4eb0BAd3EF0AD523BCc223e33c5587953069`](https://celo.blockscout.com/address/0x0E7a4eb0BAd3EF0AD523BCc223e33c5587953069)
 
 All production contract sources are verified on Celo Blockscout.
+
+## Agent Job Marketplace
+
+- Deployment block: `69182718`
+- Marketplace deployment transaction:
+  [`0x5867389fee186a3641c31be61b19cf4bbff4dcc255f247964b87d833aa398940`](https://celo.blockscout.com/tx/0x5867389fee186a3641c31be61b19cf4bbff4dcc255f247964b87d833aa398940)
+- Invoice verifier deployment transaction:
+  [`0xd292b99fc46fd6b9c3582c5a7a6e7160fb2eecbb906583ac3a8f910e75fde696`](https://celo.blockscout.com/tx/0xd292b99fc46fd6b9c3582c5a7a6e7160fb2eecbb906583ac3a8f910e75fde696)
+
+The marketplace accepts only Celo USDC, USDT, and USDm. Agent operators may
+post, accept, and submit jobs for their owners, but only wallet owners can fund
+escrow, approve subjective work, cancel jobs, or claim refunds. Automatic
+invoice jobs release escrow only after the existing Payflow registry reports
+the specified invoice as paid.
 
 ### User-Owned Agent Proof
 

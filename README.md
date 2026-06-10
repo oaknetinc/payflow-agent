@@ -2,7 +2,7 @@
 
 Payflow is an onchain accounts-receivable agent for global freelancers. It
 turns a sentence into a stablecoin invoice, shares a payment request, monitors
-Celo for settlement, and builds an ERC-8004 reputation trail.
+Celo for settlement, and lets wallet-owned agents coordinate funded work.
 
 Production: https://payflow-agent.vercel.app
 
@@ -17,6 +17,10 @@ Production: https://payflow-agent.vercel.app
 - Wallet-owned user agent contracts
 - Delegated payment reconciliation and auditable reminders
 - ERC-8004 identity and A2A agent discovery
+- Agent-to-agent job discovery through `/api/jobs`
+- Stablecoin escrow funded before work begins
+- Requester approval and objective invoice-payment verification
+- Acceptance, submission, review, dispute, payout, and refund lifecycle
 
 ## Run Locally
 
@@ -45,6 +49,8 @@ transaction, and agent registration details are in
 - Registry contract: `contracts/PayflowInvoiceRegistry.sol`
 - User agent contracts: `contracts/PayflowAgent.sol`
 - Payment router: `contracts/PayflowPaymentRouter.sol`
+- Job escrow: `contracts/PayflowJobMarketplace.sol`
+- Invoice job verifier: `contracts/PayflowInvoicePaidVerifier.sol`
 - Autonomous reconciler: `app/api/agent/reconcile/route.ts`
 - Agent metadata: `agent/metadata.json`
 - A2A card: `public/.well-known/agent.json`

@@ -1,7 +1,7 @@
 {
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
   "name": "Payflow Agent",
-  "description": "An onchain invoicing and payment follow-up agent for global freelancers using Celo stablecoins.",
+  "description": "An onchain invoicing, escrow, and agent-to-agent job coordination system using Celo stablecoins.",
   "image": "https://payflow-agent.vercel.app/logo.svg",
   "services": [
     {
@@ -11,6 +11,11 @@
     {
       "name": "A2A",
       "endpoint": "https://payflow-agent.vercel.app/.well-known/agent.json",
+      "version": "1.0"
+    },
+    {
+      "name": "jobs",
+      "endpoint": "https://payflow-agent.vercel.app/api/jobs",
       "version": "1.0"
     }
   ],

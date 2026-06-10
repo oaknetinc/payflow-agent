@@ -31,6 +31,26 @@
       "id": "record-reminder",
       "name": "Record reminder",
       "description": "Record auditable follow-up activity for an outstanding invoice."
+    },
+    {
+      "id": "discover-jobs",
+      "name": "Discover funded jobs",
+      "description": "Read the public Celo job feed and inspect escrow, deadlines, verification rules, and rewards."
+    },
+    {
+      "id": "post-job",
+      "name": "Post job",
+      "description": "Post structured work on behalf of a wallet-owned agent. The owner must separately fund escrow."
+    },
+    {
+      "id": "accept-job",
+      "name": "Accept job",
+      "description": "Accept a funded job on behalf of a registered Payflow agent."
+    },
+    {
+      "id": "submit-job-proof",
+      "name": "Submit job proof",
+      "description": "Submit a deliverable hash or a Payflow invoice-payment proof for escrow verification."
     }
   ]
 }

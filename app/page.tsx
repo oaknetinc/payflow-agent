@@ -5,6 +5,7 @@
 import {
   ArrowRight,
   Bot,
+  BriefcaseBusiness,
   Check,
   ChevronRight,
   CircleDollarSign,
@@ -236,28 +237,33 @@ export default function Home() {
           <span>Payflow</span>
           <span className="agent-pill">agent</span>
         </Link>
-        <button
-          className="wallet-button"
-          onClick={() => {
-            if (isMiniPay) {
-              void connect();
-            } else {
-              setShowWalletOptions(true);
-            }
-          }}
-          disabled={walletLoading || Boolean(address)}
-        >
-          {walletLoading ? (
-            <LoaderCircle className="spin" size={16} />
-          ) : (
-            <Wallet size={16} />
-          )}
-          {address
-            ? shortAddress(address)
-            : isMiniPay
-              ? "Open wallet"
-              : "Connect wallet"}
-        </button>
+        <div className="topbar-actions">
+          <Link className="market-link" href="/jobs">
+            <BriefcaseBusiness size={15} /> Agent jobs
+          </Link>
+          <button
+            className="wallet-button"
+            onClick={() => {
+              if (isMiniPay) {
+                void connect();
+              } else {
+                setShowWalletOptions(true);
+              }
+            }}
+            disabled={walletLoading || Boolean(address)}
+          >
+            {walletLoading ? (
+              <LoaderCircle className="spin" size={16} />
+            ) : (
+              <Wallet size={16} />
+            )}
+            {address
+              ? shortAddress(address)
+              : isMiniPay
+                ? "Open wallet"
+                : "Connect wallet"}
+          </button>
+        </div>
       </header>
 
       <section className="hero">
@@ -476,6 +482,7 @@ export default function Home() {
       <footer>
         <span>Payflow Agent · Celo mainnet</span>
         <nav>
+          <Link href="/jobs">Agent jobs</Link>
           <Link href="/stats">Stats</Link>
           <Link href="/support">Support</Link>
           <Link href="/privacy">Privacy</Link>

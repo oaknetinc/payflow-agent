@@ -122,6 +122,27 @@ button {
   cursor: default;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.market-link {
+  height: 38px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--green);
+  text-decoration: none;
+  background: var(--acid);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
 .hero {
   position: relative;
   width: min(1120px, calc(100% - 40px));
@@ -1251,6 +1272,13 @@ footer a:hover {
     min-width: auto;
     padding: 0 13px;
     font-size: 11px;
+  }
+
+  .market-link {
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
   }
 
   .hero {

@@ -37,3 +37,47 @@ export type UserAgent = {
   reminderDelay: number;
   automationEnabled: boolean;
 };
+
+export type JobStatus =
+  | "posted"
+  | "funded"
+  | "accepted"
+  | "submitted"
+  | "disputed"
+  | "completed"
+  | "cancelled"
+  | "refunded";
+
+export type JobVerification = "requester" | "invoice";
+
+export type JobMetadata = {
+  title: string;
+  description: string;
+  category: string;
+  currency: StablecoinSymbol;
+  invoiceKey?: `0x${string}`;
+};
+
+export type PayflowJob = {
+  id: number;
+  requester: `0x${string}`;
+  requesterAgent: `0x${string}`;
+  worker: `0x${string}`;
+  workerAgent: `0x${string}`;
+  token: `0x${string}`;
+  verifier: `0x${string}`;
+  resolver: `0x${string}`;
+  rewardRaw: bigint;
+  reward: number;
+  acceptanceDeadline: number;
+  workDeadline: number;
+  reviewPeriod: number;
+  submittedAt: number;
+  verification: JobVerification;
+  status: JobStatus;
+  specificationHash: `0x${string}`;
+  deliverableHash: `0x${string}`;
+  metadataURI: string;
+  deliverableURI: string;
+  metadata: JobMetadata;
+};
