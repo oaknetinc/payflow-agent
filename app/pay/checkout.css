@@ -29,9 +29,11 @@
 .checkout-card {
   padding: 30px;
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--line);
+  border: 2px solid var(--ink);
   border-radius: 25px;
-  box-shadow: 0 25px 70px rgba(21, 61, 47, 0.12);
+  box-shadow:
+    7px 7px 0 var(--cyan),
+    0 25px 70px rgba(21, 61, 47, 0.12);
 }
 
 .checkout-loading {
@@ -157,21 +159,21 @@
 }
 
 .checkout-success {
-  padding: 48px 0 20px;
+  padding: 28px 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.checkout-success > span {
-  width: 64px;
-  height: 64px;
-  display: grid;
-  place-items: center;
-  color: var(--green);
-  background: var(--mint);
+.checkout-success-art {
+  width: 150px;
+  height: 150px;
+  display: block;
+  object-fit: cover;
+  border: 2px solid var(--ink);
   border-radius: 50%;
+  box-shadow: 5px 5px 0 var(--acid);
 }
 
 .checkout-success h1 {

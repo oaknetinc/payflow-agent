@@ -1,16 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #10251d;
+  --ink: #12261f;
   --muted: #64756d;
-  --paper: #f6f8f3;
+  --paper: #fff8e8;
   --card: #ffffff;
-  --line: #dfe6de;
+  --line: #d9dfd4;
   --green: #153d2f;
   --green-2: #225b45;
   --mint: #dff3dd;
-  --acid: #d8f56b;
-  --orange: #f2ad66;
+  --acid: #cff246;
+  --cyan: #25d9d0;
+  --purple: #6d45d8;
+  --coral: #f5654c;
+  --orange: #ffa43a;
+  --pink: #ed4e9a;
+  --midnight: #11152d;
 }
 
 * {
@@ -25,8 +30,9 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 12% 8%, rgba(216, 245, 107, 0.22), transparent 23rem),
-    radial-gradient(circle at 90% 28%, rgba(100, 181, 147, 0.13), transparent 25rem),
+    radial-gradient(circle at 8% 9%, rgba(207, 242, 70, 0.3), transparent 22rem),
+    radial-gradient(circle at 94% 26%, rgba(37, 217, 208, 0.16), transparent 25rem),
+    radial-gradient(circle at 74% 68%, rgba(109, 69, 216, 0.08), transparent 28rem),
     var(--paper);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -76,8 +82,9 @@ button {
   place-items: center;
   color: white;
   background: var(--green);
-  border-radius: 11px;
-  box-shadow: 0 5px 14px rgba(21, 61, 47, 0.18);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 3px 3px 0 var(--acid);
 }
 
 .agent-pill {
@@ -116,21 +123,34 @@ button {
 }
 
 .hero {
-  width: min(820px, calc(100% - 40px));
-  margin: 84px auto 72px;
-  text-align: center;
+  position: relative;
+  width: min(1120px, calc(100% - 40px));
+  margin: 62px auto 76px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(390px, 0.78fr);
+  grid-template-areas:
+    "copy art"
+    "composer art";
+  column-gap: 34px;
+  align-items: center;
+}
+
+.hero-copy {
+  grid-area: copy;
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow {
   width: fit-content;
-  margin: 0 auto 18px;
+  margin: 0 0 18px;
   padding: 7px 11px;
   display: flex;
   align-items: center;
   gap: 7px;
   color: var(--green);
-  background: rgba(223, 243, 221, 0.78);
-  border: 1px solid rgba(34, 91, 69, 0.13);
+  background: var(--acid);
+  border: 1px solid var(--ink);
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
@@ -141,33 +161,65 @@ button {
 .hero h1 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(48px, 7vw, 76px);
+  font-size: clamp(56px, 6.3vw, 82px);
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 0.98;
 }
 
-.hero > p {
+.hero-copy > p {
   max-width: 610px;
-  margin: 23px auto 34px;
+  margin: 23px 0 30px;
   color: var(--muted);
   font-size: 18px;
   line-height: 1.65;
 }
 
-.composer {
+.hero-art {
+  grid-area: art;
   position: relative;
+  align-self: stretch;
+  min-height: 470px;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 34px 34px 92px 34px;
+  background: var(--midnight);
+  box-shadow:
+    10px 10px 0 var(--purple),
+    18px 18px 0 var(--cyan);
+  transform: rotate(1deg);
+}
+
+.hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(140deg, transparent 65%, rgba(207, 242, 70, 0.16));
+}
+
+.hero-art img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.composer {
+  grid-area: composer;
+  position: relative;
+  z-index: 2;
   min-height: 104px;
   display: flex;
   align-items: flex-start;
   padding: 22px 76px 18px 58px;
   text-align: left;
   background: white;
-  border: 1px solid rgba(21, 61, 47, 0.17);
+  border: 2px solid var(--ink);
   border-radius: 22px;
   box-shadow:
-    0 20px 60px rgba(21, 61, 47, 0.1),
-    0 2px 6px rgba(21, 61, 47, 0.04);
+    7px 7px 0 var(--cyan),
+    0 20px 60px rgba(21, 61, 47, 0.1);
 }
 
 .composer:focus-within {
@@ -207,10 +259,11 @@ button {
   height: 42px;
   display: grid;
   place-items: center;
-  border: 0;
+  border: 2px solid var(--ink);
   color: white;
   background: var(--green);
-  border-radius: 13px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 var(--acid);
 }
 
 .send-button:disabled {
@@ -246,15 +299,41 @@ button {
 }
 
 .agent-console {
+  position: relative;
+  overflow: hidden;
   margin-bottom: 14px;
   padding: 22px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border: 1px solid var(--line);
+  border: 2px solid var(--ink);
   background: rgba(255, 255, 255, 0.78);
-  border-radius: 18px;
+  border-radius: 22px;
+  box-shadow: 5px 5px 0 rgba(109, 69, 216, 0.22);
+}
+
+.agent-console-active {
+  min-height: 190px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 232, 0.84)),
+    var(--card);
+}
+
+.agent-console-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.agent-console-art {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 5px 5px 0 var(--cyan);
+  transform: rotate(3deg);
 }
 
 .agent-console h2 {
@@ -288,6 +367,22 @@ button {
   border: 1px dashed #c9d4ca;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 18px;
+}
+
+.empty-state-illustrated {
+  min-height: 290px;
+  border: 2px dashed rgba(18, 38, 31, 0.42);
+  background: rgba(255, 248, 232, 0.75);
+}
+
+.empty-state-illustrated img {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 5px;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 5px 5px 0 var(--cyan);
 }
 
 .empty-state strong {
@@ -346,7 +441,7 @@ button {
   color: white;
   background: var(--green);
   border-color: var(--green);
-  box-shadow: 0 16px 35px rgba(21, 61, 47, 0.15);
+  box-shadow: 6px 6px 0 var(--acid);
 }
 
 .stat-primary > span,
@@ -1108,6 +1203,26 @@ footer a:hover {
   }
 }
 
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+    column-gap: 26px;
+  }
+
+  .hero h1 {
+    font-size: clamp(50px, 7vw, 64px);
+  }
+
+  .hero-art {
+    min-height: 430px;
+  }
+
+  .agent-console-art {
+    width: 125px;
+    height: 125px;
+  }
+}
+
 @media (max-width: 720px) {
   .topbar,
   .dashboard,
@@ -1140,15 +1255,35 @@ footer a:hover {
 
   .hero {
     width: min(100% - 28px, 560px);
-    margin: 56px auto 52px;
+    margin: 40px auto 54px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "copy"
+      "composer"
+      "art";
+    gap: 24px;
   }
 
   .hero h1 {
     font-size: 46px;
   }
 
-  .hero > p {
+  .hero-copy > p {
+    margin: 18px 0 0;
     font-size: 15px;
+  }
+
+  .hero-art {
+    min-height: 330px;
+    border-radius: 28px 28px 64px 28px;
+    box-shadow:
+      6px 6px 0 var(--purple),
+      11px 11px 0 var(--cyan);
+    transform: none;
+  }
+
+  .hero-art img {
+    object-position: center 59%;
   }
 
   .composer {
@@ -1190,7 +1325,19 @@ footer a:hover {
     flex-direction: column;
   }
 
+  .agent-console-active {
+    min-height: auto;
+  }
+
+  .agent-console-art {
+    order: 2;
+    width: 112px;
+    height: 112px;
+    align-self: center;
+  }
+
   .agent-console .secondary-button {
+    order: 3;
     width: 100%;
   }
 

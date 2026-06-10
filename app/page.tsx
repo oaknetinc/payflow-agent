@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import {
   ArrowRight,
   Bot,
@@ -259,15 +261,28 @@ export default function Home() {
       </header>
 
       <section className="hero">
-        <div className="eyebrow">
-          <Sparkles size={14} />
-          Live on Celo mainnet
+        <div className="hero-copy">
+          <div className="eyebrow">
+            <Sparkles size={14} />
+            Live on Celo mainnet
+          </div>
+          <h1>Get paid without the chase.</h1>
+          <p>
+            Create verified stablecoin invoices, share MiniPay-ready payment
+            links, and let your wallet-owned agent monitor settlement.
+          </p>
         </div>
-        <h1>Get paid without the chase.</h1>
-        <p>
-          Create verified stablecoin invoices, share MiniPay-ready payment
-          links, and let your wallet-owned agent monitor settlement.
-        </p>
+
+        <picture className="hero-art">
+          <source media="(max-width: 720px)" srcSet="/art/hero-mobile.webp" />
+          <img
+            src="/art/hero-desktop.webp"
+            alt=""
+            width="1200"
+            height="675"
+            fetchPriority="high"
+          />
+        </picture>
 
         <form className="composer" onSubmit={parseInvoice}>
           <div className="composer-icon">
@@ -300,8 +315,8 @@ export default function Home() {
       </section>
 
       <section className="dashboard">
-        <div className="agent-console">
-          <div>
+        <div className={`agent-console ${agent ? "agent-console-active" : ""}`}>
+          <div className="agent-console-copy">
             <span className="section-kicker">YOUR AUTOMATION</span>
             {agent ? (
               <>
@@ -322,6 +337,16 @@ export default function Home() {
               </>
             )}
           </div>
+          {agent && (
+            <img
+              className="agent-console-art"
+              src="/art/agent-active.webp"
+              alt="Payflow agent routing invoices"
+              width="640"
+              height="640"
+              loading="lazy"
+            />
+          )}
           <button
             className="secondary-button"
             disabled={!address}
@@ -378,8 +403,14 @@ export default function Home() {
             <span>Your invoices and agent will load from Celo.</span>
           </div>
         ) : invoices.length === 0 ? (
-          <div className="empty-state">
-            <FileCheck2 size={24} />
+          <div className="empty-state empty-state-illustrated">
+            <img
+              src="/art/invoices-empty.webp"
+              alt=""
+              width="640"
+              height="640"
+              loading="lazy"
+            />
             <strong>No invoices yet</strong>
             <span>Create your first verified payment request above.</span>
           </div>

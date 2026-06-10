@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import {
   ArrowLeft,
   Check,
@@ -132,9 +134,13 @@ export function PaymentCheckout() {
 
         {status === "confirmed" ? (
           <div className="checkout-success">
-            <span>
-              <Check size={28} />
-            </span>
+            <img
+              className="checkout-success-art"
+              src="/art/payment-confirmed.webp"
+              alt="Payment delivered through Payflow"
+              width="640"
+              height="640"
+            />
             <h1>Payment confirmed</h1>
             <p>The stablecoin transfer was confirmed on Celo.</p>
             <a
