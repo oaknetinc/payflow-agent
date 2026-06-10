@@ -82,6 +82,13 @@ const factoryAbi = [
 ];
 const tokenAbi = [
   {
+    name: "balanceOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "account", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
     name: "transfer",
     type: "function",
     stateMutability: "nonpayable",
@@ -164,21 +171,34 @@ async function wait(hash) {
 }
 
 const transactions = {};
-transactions.fundGas = await wait(
-  await requesterClient.sendTransaction({
-    to: worker.address,
-    value: parseEther("0.02"),
-  }),
-);
-transactions.fundUsdc = await wait(
-  await requesterClient.writeContract({
-    address: usdc,
-    abi: tokenAbi,
-    functionName: "transfer",
-    args: [worker.address, parseUnits("0.012", 6)],
-    type: "legacy",
-  }),
-);
+const targetCelo = parseEther("0.2");
+const celoBalance = await publicClient.getBalance({ address: worker.address });
+if (celoBalance < targetCelo) {
+  transactions.fundGas = await wait(
+    await requesterClient.sendTransaction({
+      to: worker.address,
+      value: targetCelo - celoBalance,
+    }),
+  );
+}
+const targetUsdc = parseUnits("0.012", 6);
+const usdcBalance = await publicClient.readContract({
+  address: usdc,
+  abi: tokenAbi,
+  functionName: "balanceOf",
+  args: [worker.address],
+});
+if (usdcBalance < targetUsdc) {
+  transactions.fundUsdc = await wait(
+    await requesterClient.writeContract({
+      address: usdc,
+      abi: tokenAbi,
+      functionName: "transfer",
+      args: [worker.address, targetUsdc - usdcBalance],
+      type: "legacy",
+    }),
+  );
+}
 
 let workerAgent = await publicClient.readContract({
   address: factory,

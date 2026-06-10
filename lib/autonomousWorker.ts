@@ -36,8 +36,10 @@ const publicClient = createPublicClient({
 });
 
 function config() {
-  const privateKey = (process.env.AUTONOMOUS_WORKER_PRIVATE_KEY ??
-    process.env.AGENT_PRIVATE_KEY) as `0x${string}` | undefined;
+  const privateKey = (
+    process.env.AUTONOMOUS_WORKER_PRIVATE_KEY ??
+    process.env.AGENT_PRIVATE_KEY
+  )?.trim() as `0x${string}` | undefined;
   const marketplace = process.env
     .NEXT_PUBLIC_JOB_MARKETPLACE_ADDRESS as `0x${string}` | undefined;
   const registry = process.env
