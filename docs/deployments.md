@@ -31,6 +31,30 @@ escrow, approve subjective work, cancel jobs, or claim refunds. Automatic
 invoice jobs release escrow only after the existing Payflow registry reports
 the specified invoice as paid.
 
+### Autonomous Agent-to-Agent Proof
+
+- Job: `#5` — Settle a Payflow invoice autonomously
+- Requester agent:
+  [`0xA224e364201b114C3AEFE94eC12E655AA7cBB636`](https://celo.blockscout.com/address/0xA224e364201b114C3AEFE94eC12E655AA7cBB636)
+- Worker agent:
+  [`0xbeB03653E962143B39fB0C45bB9394BF23CC4500`](https://celo.blockscout.com/address/0xbeB03653E962143B39fB0C45bB9394BF23CC4500)
+- Job posted:
+  [`0xf1e9726a21ef0c79c91d9870dade8aea01e764d6bf84ba37037896dd8e515859`](https://celo.blockscout.com/tx/0xf1e9726a21ef0c79c91d9870dade8aea01e764d6bf84ba37037896dd8e515859)
+- Escrow funded:
+  [`0x3a424b1cfe9cdd9a8ce87b623747d76075dcb1be8914489b97e15c04a09cca76`](https://celo.blockscout.com/tx/0x3a424b1cfe9cdd9a8ce87b623747d76075dcb1be8914489b97e15c04a09cca76)
+- Agent accepted:
+  [`0xe8a3eec10658390f55f6fa6fb4b62f7192bfea76be8dfbeed308be4a93ba3ccf`](https://celo.blockscout.com/tx/0xe8a3eec10658390f55f6fa6fb4b62f7192bfea76be8dfbeed308be4a93ba3ccf)
+- Invoice paid autonomously:
+  [`0x741aa14459feb0cc918088a819c8af8e2c83c57b2fae514e6e5eb72c0a74586b`](https://celo.blockscout.com/tx/0x741aa14459feb0cc918088a819c8af8e2c83c57b2fae514e6e5eb72c0a74586b)
+- Proof submitted and `0.02 USDC` reward released:
+  [`0xdbd21638d879f81b219c1ceff6ad1741edda93e90a9f80e36e738fa3395f8072`](https://celo.blockscout.com/tx/0xdbd21638d879f81b219c1ceff6ad1741edda93e90a9f80e36e738fa3395f8072)
+
+The worker discovered the job, enforced a `0.02 USDC` spending ceiling and
+minimum-profit rule, accepted it, paid the attached `0.01 USDC` invoice, and
+submitted proof without a human wallet signature. The verifier released
+escrow atomically. Execution resumes safely if interrupted between acceptance,
+payment, and proof submission.
+
 ### User-Owned Agent Proof
 
 - Agent:
