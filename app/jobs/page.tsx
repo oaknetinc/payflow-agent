@@ -127,7 +127,9 @@ export default function JobsPage() {
           sameAddress(job.worker, address),
       );
     }
-    return jobs.filter((job) => ["funded", "accepted", "submitted"].includes(job.status));
+    return jobs.filter((job) =>
+      ["posted", "funded", "accepted", "submitted"].includes(job.status),
+    );
   }, [address, filter, jobs]);
 
   async function run(

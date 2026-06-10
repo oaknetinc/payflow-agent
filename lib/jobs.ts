@@ -61,6 +61,13 @@ const jobRequestComponents = [
 
 export const jobMarketplaceAbi = [
   {
+    name: "jobCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
     name: "postJob",
     type: "function",
     stateMutability: "nonpayable",
@@ -262,16 +269,14 @@ function normalizeJob(id: number, value: readonly unknown[]): PayflowJob {
 
 export async function loadJobs(): Promise<PayflowJob[]> {
   if (!marketplace || deploymentBlock === BigInt(0)) return [];
-  const events = await publicClient.getContractEvents({
+  const count = await publicClient.readContract({
     address: marketplace,
     abi: jobMarketplaceAbi,
-    eventName: "JobPosted",
-    fromBlock: deploymentBlock,
-    strict: true,
+    functionName: "jobCount",
   });
   const records = await Promise.all(
-    events.map(async (event) => {
-      const id = Number(event.args.jobId);
+    Array.from({ length: Number(count) }, async (_, index) => {
+      const id = index + 1;
       const value = await publicClient.readContract({
         address: marketplace,
         abi: jobMarketplaceAbi,

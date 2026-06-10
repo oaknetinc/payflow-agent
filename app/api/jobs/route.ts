@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { jobMarketplaceConfigured, loadJobs } from "@/lib/jobs";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   if (!jobMarketplaceConfigured()) {
@@ -12,15 +13,22 @@ export async function GET() {
   }
   try {
     const jobs = await loadJobs();
-    return NextResponse.json({
-      configured: true,
-      contract: process.env.NEXT_PUBLIC_JOB_MARKETPLACE_ADDRESS,
-      chainId: 42220,
-      jobs: jobs.map((job) => ({
-        ...job,
-        rewardRaw: job.rewardRaw.toString(),
-      })),
-    });
+    return NextResponse.json(
+      {
+        configured: true,
+        contract: process.env.NEXT_PUBLIC_JOB_MARKETPLACE_ADDRESS,
+        chainId: 42220,
+        jobs: jobs.map((job) => ({
+          ...job,
+          rewardRaw: job.rewardRaw.toString(),
+        })),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
+    );
   } catch (error) {
     return NextResponse.json(
       {
