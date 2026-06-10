@@ -497,6 +497,165 @@ button {
   font-weight: 900;
 }
 
+.autonomous-proof {
+  width: min(1060px, calc(100% - 40px));
+  margin: 0 auto 54px;
+  padding: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.82fr);
+  gap: 28px;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 8% 100%, rgba(237, 78, 154, 0.35), transparent 18rem),
+    radial-gradient(circle at 92% 5%, rgba(207, 242, 70, 0.18), transparent 15rem),
+    var(--purple);
+  border: 2px solid var(--ink);
+  border-radius: 28px;
+  box-shadow: 7px 7px 0 var(--cyan);
+}
+
+.autonomous-proof .section-kicker {
+  color: var(--acid);
+}
+
+.autonomous-proof h2 {
+  max-width: 580px;
+  margin: 8px 0 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.autonomous-proof-copy > p {
+  max-width: 590px;
+  margin: 0;
+  color: rgba(255, 248, 232, 0.75);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.autonomous-agent-pair {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.autonomous-agent-pair a {
+  min-width: 0;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  color: var(--paper);
+  text-decoration: none;
+  background: rgba(17, 21, 45, 0.34);
+  border: 1px solid rgba(255, 248, 232, 0.24);
+  border-radius: 14px;
+}
+
+.autonomous-agent-pair a svg {
+  grid-row: 1 / 3;
+  align-self: center;
+  color: var(--acid);
+}
+
+.autonomous-agent-pair span {
+  color: rgba(255, 248, 232, 0.6);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.autonomous-agent-pair strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+}
+
+.autonomous-proof-card {
+  padding: 22px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 5px 5px 0 var(--acid);
+}
+
+.autonomous-proof-card > strong {
+  display: block;
+  margin: 14px 0 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.autonomous-proof-status {
+  width: fit-content;
+  padding: 6px 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #16623f;
+  background: var(--mint);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.autonomous-proof-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.autonomous-proof-metrics div {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.autonomous-proof-metrics span {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.autonomous-proof-metrics b {
+  font-size: 12px;
+}
+
+.autonomous-proof-links {
+  margin-top: 14px;
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.autonomous-proof-links a {
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--green);
+  text-decoration: none;
+  background: var(--acid);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+}
+
 .agent-console {
   position: relative;
   overflow: hidden;
@@ -1426,6 +1585,7 @@ footer a:hover {
   .topbar,
   .dashboard,
   .home-jobs,
+  .autonomous-proof,
   .trust-strip,
   footer {
     width: min(100% - 28px, 560px);
@@ -1570,6 +1730,36 @@ footer a:hover {
 
   .home-job-card {
     min-height: 180px;
+  }
+
+  .autonomous-proof {
+    padding: 22px 18px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    border-radius: 22px;
+    box-shadow: 5px 5px 0 var(--cyan);
+  }
+
+  .autonomous-proof h2 {
+    font-size: 29px;
+  }
+
+  .autonomous-agent-pair {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .autonomous-agent-pair > svg {
+    align-self: center;
+    transform: rotate(90deg);
+  }
+
+  .autonomous-agent-pair a {
+    width: 100%;
+  }
+
+  .autonomous-proof-metrics {
+    grid-template-columns: 1fr;
   }
 
   .agent-console-active {

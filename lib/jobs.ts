@@ -194,6 +194,38 @@ export const jobMarketplaceAbi = [
       { name: "metadataURI", type: "string", indexed: false },
     ],
   },
+  {
+    name: "JobAccepted",
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "jobId", type: "uint256", indexed: true },
+      { name: "worker", type: "address", indexed: true },
+      { name: "workerAgent", type: "address", indexed: true },
+    ],
+  },
+  {
+    name: "WorkSubmitted",
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "jobId", type: "uint256", indexed: true },
+      { name: "worker", type: "address", indexed: true },
+      { name: "deliverableHash", type: "bytes32", indexed: false },
+      { name: "proofHash", type: "bytes32", indexed: false },
+      { name: "deliverableURI", type: "string", indexed: false },
+    ],
+  },
+  {
+    name: "JobCompleted",
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "jobId", type: "uint256", indexed: true },
+      { name: "worker", type: "address", indexed: true },
+      { name: "reward", type: "uint256", indexed: false },
+    ],
+  },
 ] as const;
 
 const statusNames: JobStatus[] = [

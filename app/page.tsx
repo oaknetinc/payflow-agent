@@ -11,6 +11,7 @@ import {
   CircleDollarSign,
   Clock3,
   Copy,
+  ExternalLink,
   FileCheck2,
   LoaderCircle,
   Plus,
@@ -41,6 +42,15 @@ import {
   StablecoinSymbol,
   UserAgent,
 } from "@/lib/types";
+
+type AutonomousActivity = {
+  job: Omit<PayflowJob, "rewardRaw"> & { rewardRaw: string };
+  transactions: {
+    accepted?: `0x${string}`;
+    paid?: `0x${string}`;
+    completed?: `0x${string}`;
+  };
+};
 
 const statusMeta: Record<
   InvoiceStatus,
@@ -76,6 +86,8 @@ export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [jobs, setJobs] = useState<PayflowJob[]>([]);
+  const [autonomousActivity, setAutonomousActivity] =
+    useState<AutonomousActivity | null>(null);
   const [agent, setAgent] = useState<UserAgent | null>(null);
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
   const [selected, setSelected] = useState<Invoice | null>(null);
@@ -130,6 +142,21 @@ export default function Home() {
         .then(setJobs)
         .catch(() => setJobs([]))
         .finally(() => setIsLoadingJobs(false));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void fetch("/api/agent/activity", { cache: "no-store" })
+        .then(async (response) => {
+          if (!response.ok) return null;
+          return (await response.json()) as {
+            activity: AutonomousActivity | null;
+          };
+        })
+        .then((result) => setAutonomousActivity(result?.activity ?? null))
+        .catch(() => setAutonomousActivity(null));
     }, 0);
     return () => window.clearTimeout(timer);
   }, []);
@@ -405,6 +432,88 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {autonomousActivity && (
+        <section className="autonomous-proof">
+          <div className="autonomous-proof-copy">
+            <span className="section-kicker">LIVE AUTONOMOUS PROOF</span>
+            <h2>An agent found work, paid an invoice, and earned.</h2>
+            <p>
+              Job #{autonomousActivity.job.id} ran without a human wallet
+              signature. Celo verified the paid invoice and released escrow
+              automatically.
+            </p>
+            <div className="autonomous-agent-pair">
+              <a
+                href={`https://celo.blockscout.com/address/${autonomousActivity.job.requesterAgent}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Bot size={16} />
+                <span>Requester agent</span>
+                <strong>
+                  {shortAddress(autonomousActivity.job.requesterAgent)}
+                </strong>
+              </a>
+              <ArrowRight size={18} />
+              <a
+                href={`https://celo.blockscout.com/address/${autonomousActivity.job.workerAgent}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Bot size={16} />
+                <span>Worker agent</span>
+                <strong>
+                  {shortAddress(autonomousActivity.job.workerAgent)}
+                </strong>
+              </a>
+            </div>
+          </div>
+
+          <div className="autonomous-proof-card">
+            <div className="autonomous-proof-status">
+              <Check size={16} />
+              Completed on Celo
+            </div>
+            <strong>{autonomousActivity.job.metadata.title}</strong>
+            <div className="autonomous-proof-metrics">
+              <div>
+                <span>Invoice paid</span>
+                <b>0.01 USDC</b>
+              </div>
+              <div>
+                <span>Reward earned</span>
+                <b>
+                  {autonomousActivity.job.reward}{" "}
+                  {autonomousActivity.job.metadata.currency}
+                </b>
+              </div>
+              <div>
+                <span>Verification</span>
+                <b>Automatic</b>
+              </div>
+            </div>
+            <div className="autonomous-proof-links">
+              {[
+                ["Agent accepted", autonomousActivity.transactions.accepted],
+                ["Invoice paid", autonomousActivity.transactions.paid],
+                ["Proof + payout", autonomousActivity.transactions.completed],
+              ].map(([label, hash]) =>
+                hash ? (
+                  <a
+                    href={`https://celo.blockscout.com/tx/${hash}`}
+                    key={label}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {label} <ExternalLink size={12} />
+                  </a>
+                ) : null,
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="dashboard">
         <div className={`agent-console ${agent ? "agent-console-active" : ""}`}>
