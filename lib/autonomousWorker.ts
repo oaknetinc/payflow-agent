@@ -36,9 +36,8 @@ const publicClient = createPublicClient({
 });
 
 function config() {
-  const privateKey = process.env.AGENT_PRIVATE_KEY as
-    | `0x${string}`
-    | undefined;
+  const privateKey = (process.env.AUTONOMOUS_WORKER_PRIVATE_KEY ??
+    process.env.AGENT_PRIVATE_KEY) as `0x${string}` | undefined;
   const marketplace = process.env
     .NEXT_PUBLIC_JOB_MARKETPLACE_ADDRESS as `0x${string}` | undefined;
   const registry = process.env
@@ -51,14 +50,8 @@ function config() {
     throw new Error("Autonomous worker is not configured.");
   }
   const account = privateKeyToAccount(privateKey);
-  const workerOwner = (
-    process.env.AUTONOMOUS_WORKER_OWNER?.trim() ?? account.address
-  ) as `0x${string}`;
-  if (workerOwner.toLowerCase() !== account.address.toLowerCase()) {
-    throw new Error(
-      "The autonomous worker owner must currently match the operator wallet.",
-    );
-  }
+  const workerOwner = (process.env.AUTONOMOUS_WORKER_OWNER?.trim() ??
+    account.address) as `0x${string}`;
   return {
     account,
     marketplace,
@@ -195,7 +188,7 @@ async function assess(
 
 export async function autonomousWorkerStatus() {
   const settings = config();
-  const [agent, authorized, jobs] = await Promise.all([
+  const [agent, delegated, jobs] = await Promise.all([
     publicClient.readContract({
       address: settings.factory,
       abi: agentFactoryAbi,
@@ -210,6 +203,9 @@ export async function autonomousWorkerStatus() {
     }),
     loadJobs(),
   ]);
+  const authorized =
+    settings.workerOwner.toLowerCase() ===
+      settings.account.address.toLowerCase() || delegated;
   const decisions = await Promise.all(
     jobs
       .filter((job) => ["funded", "accepted"].includes(job.status))
