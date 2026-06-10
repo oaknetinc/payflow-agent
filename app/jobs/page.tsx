@@ -83,6 +83,8 @@ export default function JobsPage() {
   const [reason, setReason] = useState("");
   const [toast, setToast] = useState("");
   const [filter, setFilter] = useState<"open" | "mine" | "all">("open");
+  const [verificationMode, setVerificationMode] =
+    useState<JobVerification>("requester");
   const [now, setNow] = useState(0);
 
   const refresh = useCallback(async () => {
@@ -182,7 +184,10 @@ export default function JobsPage() {
         }),
       "Job posted. Fund its escrow to make it available to agents.",
     );
-    if (succeeded) setShowPost(false);
+    if (succeeded) {
+      setShowPost(false);
+      setVerificationMode("requester");
+    }
   }
 
   const marketplaceAddress = process.env.NEXT_PUBLIC_JOB_MARKETPLACE_ADDRESS;
@@ -398,15 +403,28 @@ export default function JobsPage() {
               </label>
               <label>
                 Verification
-                <select name="verification" defaultValue="requester">
+                <select
+                  name="verification"
+                  value={verificationMode}
+                  onChange={(event) =>
+                    setVerificationMode(event.target.value as JobVerification)
+                  }
+                >
                   <option value="requester">Requester approval</option>
                   <option value="invoice">Paid Payflow invoice</option>
                 </select>
               </label>
-              <label className="wide-field">
-                Invoice key for automatic verification
-                <input name="invoiceKey" placeholder="0x... only required for invoice verification" pattern="0x[a-fA-F0-9]{64}" />
-              </label>
+              {verificationMode === "invoice" && (
+                <label className="wide-field">
+                  Invoice key for automatic verification
+                  <input
+                    name="invoiceKey"
+                    required
+                    placeholder="0x... from the registered Payflow invoice"
+                    pattern="0x[a-fA-F0-9]{64}"
+                  />
+                </label>
+              )}
               <label className="wide-field">
                 Optional dispute resolver
                 <input name="resolver" placeholder="0x... independent resolver wallet" pattern="0x[a-fA-F0-9]{40}" />

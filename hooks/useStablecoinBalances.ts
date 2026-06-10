@@ -14,6 +14,7 @@ const publicClient = createPublicClient({ chain: celo, transport: http() });
 export function useStablecoinBalances(address: `0x${string}` | null) {
   const [balances, setBalances] = useState<Balances>(emptyBalances);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
     if (!address) {
@@ -22,6 +23,7 @@ export function useStablecoinBalances(address: `0x${string}` | null) {
     }
 
     setIsLoading(true);
+    setError("");
     try {
       const entries = await Promise.all(
         (Object.keys(stablecoins) as StablecoinSymbol[]).map(
@@ -38,6 +40,13 @@ export function useStablecoinBalances(address: `0x${string}` | null) {
         ),
       );
       setBalances(Object.fromEntries(entries) as Balances);
+    } catch (cause) {
+      setBalances(emptyBalances);
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Could not load stablecoin balances.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -58,5 +67,5 @@ export function useStablecoinBalances(address: `0x${string}` | null) {
     [balances],
   );
 
-  return { balances, preferred, isLoading, refresh };
+  return { balances, preferred, isLoading, error, refresh };
 }

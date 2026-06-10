@@ -249,11 +249,20 @@ function normalizeJob(
   id: number,
   value: readonly unknown[] | Record<string, unknown>,
 ): PayflowJob {
-  const token = jobField(value, 4, "token") as `0x${string}`;
+  const tokenValue = jobField(value, 4, "token");
+  if (typeof tokenValue !== "string") {
+    throw new Error(`Job #${id} returned an invalid token address.`);
+  }
+  const token = tokenValue as `0x${string}`;
   const tokenEntry = getStablecoinByAddress(token);
+  if (!tokenEntry) {
+    throw new Error(`Job #${id} uses an unsupported reward token.`);
+  }
   const currency = (tokenEntry?.[0] ?? "USDC") as StablecoinSymbol;
   const decimals = tokenEntry?.[1].decimals ?? 6;
-  const metadataURI = jobField(value, 16, "metadataURI") as string;
+  const metadataValue = jobField(value, 16, "metadataURI");
+  const metadataURI =
+    typeof metadataValue === "string" ? metadataValue : "";
   const metadata = parseJobMetadata(metadataURI);
   return {
     id,

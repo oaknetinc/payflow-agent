@@ -207,7 +207,8 @@ export const payflowAgentAbi = [
   },
 ] as const;
 
-export function getStablecoinByAddress(address: string) {
+export function getStablecoinByAddress(address?: string) {
+  if (!address) return undefined;
   return Object.entries(stablecoins).find(
     ([, token]) => token.address.toLowerCase() === address.toLowerCase(),
   );

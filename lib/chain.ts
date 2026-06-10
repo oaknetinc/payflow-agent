@@ -12,7 +12,10 @@ export async function ensureCelo(provider = getWalletProvider()) {
   if (!provider) throw new Error("Connect a wallet to continue.");
   const chainId = (await provider.request({
     method: "eth_chainId",
-  })) as string;
+  })) as unknown;
+  if (typeof chainId !== "string") {
+    throw new Error("The connected wallet returned an invalid network.");
+  }
   if (chainId.toLowerCase() === CELO_CHAIN_HEX) return;
   await provider.request({
     method: "wallet_switchEthereumChain",

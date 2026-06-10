@@ -28,8 +28,12 @@ export function PaymentCheckout() {
   );
   const { address, connect, isMiniPay, isLoading, error: walletError } =
     useMiniPay();
-  const { balances, preferred, isLoading: balancesLoading } =
-    useStablecoinBalances(address);
+  const {
+    balances,
+    preferred,
+    isLoading: balancesLoading,
+    error: balancesError,
+  } = useStablecoinBalances(address);
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [status, setStatus] = useState<
     "loading" | "idle" | "paying" | "confirmed" | "error"
@@ -200,8 +204,10 @@ export function PaymentCheckout() {
               </div>
             )}
 
-            {(status === "error" || walletError) && (
-              <p className="payment-error">{message || walletError}</p>
+            {(status === "error" || walletError || balancesError) && (
+              <p className="payment-error">
+                {message || walletError || balancesError}
+              </p>
             )}
 
             <button
@@ -210,6 +216,7 @@ export function PaymentCheckout() {
               disabled={
                 isLoading ||
                 balancesLoading ||
+                Boolean(balancesError) ||
                 status === "paying" ||
                 invoice.status === "paid" ||
                 invoice.status === "cancelled"
