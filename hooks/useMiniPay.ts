@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ensureCelo } from "@/lib/chain";
 import {
   createWalletConnectProvider,
+  getWalletProvider,
   setWalletProvider,
 } from "@/lib/wallet";
 
@@ -80,11 +81,67 @@ export function useMiniPay() {
   }, [connectInjected, connectWalletConnect]);
 
   const disconnect = useCallback(async () => {
-    setWalletProvider(null);
-    setAddress(null);
-    setWalletKind(null);
-    setIsMiniPay(false);
-  }, []);
+    const provider = getWalletProvider();
+    setIsLoading(true);
+    setError("");
+    try {
+      if (walletKind === "walletconnect") {
+        await provider?.disconnect?.();
+      } else if (provider && walletKind === "injected") {
+        await provider.request({
+          method: "wallet_revokePermissions",
+          params: [{ eth_accounts: {} }],
+        });
+      }
+    } catch {
+      // Some injected wallets do not support permission revocation. Clearing
+      // Payflow's active provider still lets the user choose another wallet.
+    } finally {
+      setWalletProvider(null);
+      setAddress(null);
+      setWalletKind(null);
+      setIsMiniPay(false);
+      setIsLoading(false);
+    }
+  }, [walletKind]);
+
+  const switchAccount = useCallback(async () => {
+    const provider = getWalletProvider();
+    setIsLoading(true);
+    setError("");
+    try {
+      if (walletKind === "walletconnect") {
+        await provider?.disconnect?.();
+        setWalletProvider(null);
+        setAddress(null);
+        setWalletKind(null);
+        await connectWalletConnect();
+        return;
+      }
+      if (!provider) {
+        await connect();
+        return;
+      }
+      try {
+        await provider.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+      } catch {
+        await provider.request({ method: "eth_requestAccounts" });
+      }
+      await bindProvider(
+        provider,
+        provider.isMiniPay ? "minipay" : "injected",
+      );
+    } catch (cause) {
+      setError(
+        cause instanceof Error ? cause.message : "Could not switch account.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [bindProvider, connect, connectWalletConnect, walletKind]);
 
   useEffect(() => {
     const provider = window.ethereum;
@@ -122,6 +179,7 @@ export function useMiniPay() {
     connectInjected,
     connectWalletConnect,
     disconnect,
+    switchAccount,
     hasInjectedWallet: Boolean(
       typeof window !== "undefined" && window.ethereum,
     ),

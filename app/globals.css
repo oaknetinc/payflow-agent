@@ -1277,6 +1277,16 @@ footer a:hover {
   background: #f5faf3;
 }
 
+.wallet-option-danger:hover {
+  color: #9f2d20;
+  border-color: #d97a6d;
+  background: #fff5f3;
+}
+
+.wallet-option-danger:hover strong {
+  color: #9f2d20;
+}
+
 .wallet-option span {
   display: flex;
   flex-direction: column;

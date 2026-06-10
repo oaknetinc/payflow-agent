@@ -9,8 +9,10 @@ import {
   Clock3,
   ExternalLink,
   FileCheck2,
+  LogOut,
   LoaderCircle,
   Plus,
+  QrCode,
   RefreshCw,
   ShieldCheck,
   Wallet,
@@ -71,13 +73,24 @@ function sameAddress(a?: string | null, b?: string | null) {
 }
 
 export default function JobsPage() {
-  const { address, connect, isLoading: walletLoading, error: walletError } =
-    useMiniPay();
+  const {
+    address,
+    connect,
+    connectInjected,
+    connectWalletConnect,
+    disconnect,
+    hasInjectedWallet,
+    isMiniPay,
+    isLoading: walletLoading,
+    switchAccount,
+    error: walletError,
+  } = useMiniPay();
   const [jobs, setJobs] = useState<PayflowJob[]>([]);
   const [agent, setAgent] = useState<UserAgent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [busyJob, setBusyJob] = useState<number | "post" | null>(null);
   const [showPost, setShowPost] = useState(false);
+  const [showWalletOptions, setShowWalletOptions] = useState(false);
   const [selected, setSelected] = useState<PayflowJob | null>(null);
   const [deliverable, setDeliverable] = useState("");
   const [reason, setReason] = useState("");
@@ -201,11 +214,105 @@ export default function JobsPage() {
           </span>
           <span>Payflow</span>
         </Link>
-        <button className="wallet-button" disabled={walletLoading} onClick={() => void connect()}>
+        <button
+          className="wallet-button"
+          disabled={walletLoading}
+          onClick={() => {
+            if (address) setShowWalletOptions(true);
+            else if (isMiniPay) void connect();
+            else setShowWalletOptions(true);
+          }}
+        >
           {walletLoading ? <LoaderCircle className="spin" size={16} /> : <Wallet size={16} />}
           {address ? shortAddress(address) : "Connect wallet"}
         </button>
       </header>
+
+      {showWalletOptions && (
+        <div className="modal-backdrop" onMouseDown={() => setShowWalletOptions(false)}>
+          <section
+            className="modal wallet-modal"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setShowWalletOptions(false)}>
+              <X size={18} />
+            </button>
+            <span className="modal-icon"><Wallet size={20} /></span>
+            <span className="section-kicker">
+              {address ? "CONNECTED WALLET" : "CONNECT WALLET"}
+            </span>
+            <h2>{address ? shortAddress(address) : "Choose how to connect"}</h2>
+            <p>
+              {address
+                ? "Switch to another account or disconnect this wallet from Payflow."
+                : "Use an installed browser wallet or pair any WalletConnect-compatible mobile wallet."}
+            </p>
+            <div className="wallet-options">
+              {address ? (
+                <>
+                  <button
+                    className="wallet-option"
+                    onClick={async () => {
+                      await switchAccount();
+                      setShowWalletOptions(false);
+                    }}
+                  >
+                    <RefreshCw size={20} />
+                    <span>
+                      <strong>Switch account</strong>
+                      Choose another account using your current wallet
+                    </span>
+                  </button>
+                  <button
+                    className="wallet-option wallet-option-danger"
+                    onClick={async () => {
+                      await disconnect();
+                      setShowWalletOptions(false);
+                    }}
+                  >
+                    <LogOut size={20} />
+                    <span>
+                      <strong>Disconnect</strong>
+                      End this session and return to the disconnected state
+                    </span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {hasInjectedWallet && (
+                    <button
+                      className="wallet-option"
+                      onClick={async () => {
+                        await connectInjected();
+                        setShowWalletOptions(false);
+                      }}
+                    >
+                      <Wallet size={20} />
+                      <span>
+                        <strong>Browser wallet</strong>
+                        MetaMask, Valora, Coinbase Wallet, or another extension
+                      </span>
+                    </button>
+                  )}
+                  <button
+                    className="wallet-option"
+                    onClick={async () => {
+                      await connectWalletConnect();
+                      setShowWalletOptions(false);
+                    }}
+                  >
+                    <QrCode size={20} />
+                    <span>
+                      <strong>WalletConnect</strong>
+                      Scan a QR code or open your wallet on mobile
+                    </span>
+                  </button>
+                </>
+              )}
+            </div>
+          </section>
+        </div>
+      )}
 
       <section className="jobs-hero">
         <div>
