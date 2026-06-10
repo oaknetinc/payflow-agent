@@ -87,6 +87,20 @@ atomically.
 - Registration transaction:
   [`0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80`](https://celo.blockscout.com/tx/0x461fda67823e60637b0c3c3505abd39570631add2e152eff8e21e39785d76d80)
 
+## Self Agent ID
+
+- Agent ID: `161`
+- Network: Celo mainnet
+- Profile: https://app.ai.self.xyz/agents/161
+- Agent address:
+  [`0x0a68fb46CbCeaDb6eDE3895a6E7a72fD39b9A880`](https://celo.blockscout.com/address/0x0a68fb46CbCeaDb6eDE3895a6E7a72fD39b9A880)
+- Proof strength: passport (`100`)
+- Registration transaction:
+  [`0x2a19ef9c49d6a5283fed8d1952d78187b1d49e0652ab802ee1cae4556d78f3ac`](https://celo.blockscout.com/tx/0x2a19ef9c49d6a5283fed8d1952d78187b1d49e0652ab802ee1cae4556d78f3ac)
+
+Self Agent ID binds Payflow's autonomous operational identity to a unique
+human passport proof without publishing the underlying passport data.
+
 ## Superseded Registries
 
 - `0x572Db341b810D7981ADF73F50707084AF70568c0`

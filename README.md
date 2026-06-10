@@ -41,6 +41,9 @@ Verified invoice registry:
 ERC-8004 identity:
 [#9229 on 8004scan](https://8004scan.io/agents/celo/9229)
 
+Self proof-of-human identity:
+[#161 on Self Agent ID](https://app.ai.self.xyz/agents/161)
+
 The stablecoin and fee-currency addresses live in `lib/celo.ts`. Full contract,
 transaction, and agent registration details are in
 [`docs/deployments.md`](docs/deployments.md).
