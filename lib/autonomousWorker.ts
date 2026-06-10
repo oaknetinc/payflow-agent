@@ -51,8 +51,9 @@ function config() {
     throw new Error("Autonomous worker is not configured.");
   }
   const account = privateKeyToAccount(privateKey);
-  const workerOwner = (process.env.AUTONOMOUS_WORKER_OWNER ??
-    account.address) as `0x${string}`;
+  const workerOwner = (
+    process.env.AUTONOMOUS_WORKER_OWNER?.trim() ?? account.address
+  ) as `0x${string}`;
   if (workerOwner.toLowerCase() !== account.address.toLowerCase()) {
     throw new Error(
       "The autonomous worker owner must currently match the operator wallet.",
@@ -65,8 +66,9 @@ function config() {
     router,
     factory,
     workerOwner,
-    maxSpend: process.env.AUTONOMOUS_WORKER_MAX_SPEND ?? "0.02",
-    minProfit: process.env.AUTONOMOUS_WORKER_MIN_PROFIT ?? "0.005",
+    maxSpend: process.env.AUTONOMOUS_WORKER_MAX_SPEND?.trim() ?? "0.02",
+    minProfit:
+      process.env.AUTONOMOUS_WORKER_MIN_PROFIT?.trim() ?? "0.005",
   };
 }
 
