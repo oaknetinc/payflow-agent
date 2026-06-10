@@ -51,6 +51,11 @@
       "id": "submit-job-proof",
       "name": "Submit job proof",
       "description": "Submit a deliverable hash or a Payflow invoice-payment proof for escrow verification."
+    },
+    {
+      "id": "execute-invoice-job",
+      "name": "Execute invoice job autonomously",
+      "description": "Discover a profitable invoice-payment job, accept it through delegated authority, pay within a strict spending cap, and submit proof for automatic escrow release."
     }
   ]
 }

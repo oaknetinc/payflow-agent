@@ -71,6 +71,18 @@ export const paymentRouterAbi = [
 
 export const invoiceRegistryAbi = [
   {
+    name: "paymentDetails",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "invoiceId", type: "bytes32" }],
+    outputs: [
+      { name: "recipient", type: "address" },
+      { name: "token", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "status", type: "uint8" },
+    ],
+  },
+  {
     name: "createInvoice",
     type: "function",
     stateMutability: "nonpayable",
@@ -161,6 +173,16 @@ export const agentFactoryAbi = [
     stateMutability: "view",
     inputs: [{ name: "owner", type: "address" }],
     outputs: [{ name: "agent", type: "address" }],
+  },
+  {
+    name: "isOperatorFor",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "owner", type: "address" },
+      { name: "operator", type: "address" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
   },
 ] as const;
 

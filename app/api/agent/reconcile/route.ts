@@ -12,6 +12,7 @@ import {
   invoiceRegistryAbi,
   payflowAgentAbi,
 } from "@/lib/celo";
+import { runAutonomousWorker } from "@/lib/autonomousWorker";
 
 export const maxDuration = 60;
 
@@ -167,7 +168,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
-    return NextResponse.json(await reconcile());
+    const invoices = await reconcile();
+    const worker = await runAutonomousWorker();
+    return NextResponse.json({ invoices, worker });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Reconcile failed" },

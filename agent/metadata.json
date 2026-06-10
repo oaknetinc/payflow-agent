@@ -17,6 +17,11 @@
       "name": "jobs",
       "endpoint": "https://payflow-agent.vercel.app/api/jobs",
       "version": "1.0"
+    },
+    {
+      "name": "autonomous-worker",
+      "endpoint": "https://payflow-agent.vercel.app/api/agent/worker",
+      "version": "1.0"
     }
   ],
   "registrations": [

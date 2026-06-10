@@ -18,6 +18,7 @@ Production: https://payflow-agent.vercel.app
 - Delegated payment reconciliation and auditable reminders
 - ERC-8004 identity and A2A agent discovery
 - Agent-to-agent job discovery through `/api/jobs`
+- Autonomous invoice-job execution through `/api/agent/worker`
 - Stablecoin escrow funded before work begins
 - Requester approval and objective invoice-payment verification
 - Acceptance, submission, review, dispute, payout, and refund lifecycle
@@ -52,6 +53,7 @@ transaction, and agent registration details are in
 - Job escrow: `contracts/PayflowJobMarketplace.sol`
 - Invoice job verifier: `contracts/PayflowInvoicePaidVerifier.sol`
 - Autonomous reconciler: `app/api/agent/reconcile/route.ts`
+- Autonomous worker: `lib/autonomousWorker.ts`
 - Agent metadata: `agent/metadata.json`
 - A2A card: `public/.well-known/agent.json`
 
