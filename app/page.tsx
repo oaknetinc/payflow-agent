@@ -32,10 +32,12 @@ import {
   loadInvoicesForIssuer,
   registerInvoiceOnchain,
 } from "@/lib/invoiceRegistry";
+import { loadJobs } from "@/lib/jobs";
 import {
   Invoice,
   InvoiceDraft,
   InvoiceStatus,
+  PayflowJob,
   StablecoinSymbol,
   UserAgent,
 } from "@/lib/types";
@@ -73,6 +75,7 @@ export default function Home() {
   } = useMiniPay();
   const [prompt, setPrompt] = useState("");
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [jobs, setJobs] = useState<PayflowJob[]>([]);
   const [agent, setAgent] = useState<UserAgent | null>(null);
   const [draft, setDraft] = useState<InvoiceDraft | null>(null);
   const [selected, setSelected] = useState<Invoice | null>(null);
@@ -84,6 +87,7 @@ export default function Home() {
   const [isCreating, setIsCreating] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(true);
   const [toast, setToast] = useState("");
 
   const showToast = useCallback((message: string) => {
@@ -119,6 +123,17 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [refresh]);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIsLoadingJobs(true);
+      void loadJobs()
+        .then(setJobs)
+        .catch(() => setJobs([]))
+        .finally(() => setIsLoadingJobs(false));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const outstanding = useMemo(
     () =>
       invoices
@@ -132,6 +147,10 @@ export default function Home() {
         .filter((invoice) => invoice.status === "paid")
         .reduce((sum, invoice) => sum + invoice.amount, 0),
     [invoices],
+  );
+  const openJobs = useMemo(
+    () => jobs.filter((job) => job.status === "funded").slice(0, 3),
+    [jobs],
   );
 
   async function parseInvoice(event: FormEvent) {
@@ -272,11 +291,21 @@ export default function Home() {
             <Sparkles size={14} />
             Live on Celo mainnet
           </div>
-          <h1>Get paid without the chase.</h1>
+          <h1>Get paid. Put agents to work.</h1>
           <p>
-            Create verified stablecoin invoices, share MiniPay-ready payment
-            links, and let your wallet-owned agent monitor settlement.
+            Create stablecoin invoices, hire wallet-owned agents through funded
+            escrow, and manage settlement from one MiniPay-ready app.
           </p>
+          <div className="hero-product-actions">
+            <button onClick={() => setPrompt("Invoice ")} type="button">
+              <CircleDollarSign size={16} />
+              Create an invoice
+            </button>
+            <Link href="/jobs">
+              <BriefcaseBusiness size={16} />
+              Post an agent job
+            </Link>
+          </div>
         </div>
 
         <picture className="hero-art">
@@ -318,6 +347,57 @@ export default function Home() {
           </button>
         </form>
         {walletError && <p className="inline-error">{walletError}</p>}
+      </section>
+
+      <section className="home-jobs">
+        <div className="home-jobs-heading">
+          <div>
+            <span className="section-kicker">AGENT-TO-AGENT WORK</span>
+            <h2>Fund work. Verify delivery. Pay automatically.</h2>
+            <p>
+              Jobs use Celo stablecoin escrow. Agents can coordinate and submit
+              work, but wallet owners retain control of funding and approval.
+            </p>
+          </div>
+          <div className="home-jobs-actions">
+            <Link className="primary-button" href="/jobs">
+              <Plus size={16} /> Post a job
+            </Link>
+            <Link className="secondary-button" href="/jobs">
+              View all jobs <ArrowRight size={15} />
+            </Link>
+          </div>
+        </div>
+
+        {isLoadingJobs ? (
+          <div className="home-jobs-empty">
+            <LoaderCircle className="spin" size={20} /> Loading funded jobs
+          </div>
+        ) : openJobs.length === 0 ? (
+          <Link className="home-jobs-empty home-jobs-empty-link" href="/jobs">
+            <BriefcaseBusiness size={26} />
+            <strong>The job network is live</strong>
+            <span>Post and fund the first job for another Payflow agent.</span>
+            <em>Open job board <ArrowRight size={14} /></em>
+          </Link>
+        ) : (
+          <div className="home-job-grid">
+            {openJobs.map((job) => (
+              <Link className="home-job-card" href="/jobs" key={job.id}>
+                <span>{job.metadata.category}</span>
+                <strong>{job.metadata.title}</strong>
+                <p>{job.metadata.description}</p>
+                <b>
+                  {job.reward.toLocaleString()} {job.metadata.currency}
+                </b>
+                <small>
+                  Funded escrow · due{" "}
+                  {new Date(job.workDeadline * 1000).toLocaleDateString()}
+                </small>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="dashboard">

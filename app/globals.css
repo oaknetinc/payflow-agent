@@ -196,6 +196,33 @@ button {
   line-height: 1.65;
 }
 
+.hero-product-actions {
+  margin-bottom: 25px;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.hero-product-actions button,
+.hero-product-actions a {
+  min-height: 39px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.hero-product-actions a {
+  background: var(--acid);
+}
+
 .hero-art {
   grid-area: art;
   position: relative;
@@ -317,6 +344,157 @@ button {
 .dashboard {
   width: min(1060px, calc(100% - 40px));
   margin: 0 auto;
+}
+
+.home-jobs {
+  width: min(1060px, calc(100% - 40px));
+  margin: 0 auto 54px;
+  padding: 30px;
+  border: 2px solid var(--ink);
+  background:
+    radial-gradient(circle at 92% 12%, rgba(37, 217, 208, 0.32), transparent 14rem),
+    var(--midnight);
+  border-radius: 28px;
+  box-shadow: 7px 7px 0 var(--purple);
+}
+
+.home-jobs-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.home-jobs .section-kicker {
+  color: var(--acid);
+}
+
+.home-jobs-heading h2 {
+  max-width: 650px;
+  margin: 8px 0;
+  color: var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.home-jobs-heading p {
+  max-width: 650px;
+  margin: 0;
+  color: rgba(255, 248, 232, 0.66);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.home-jobs-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.home-jobs-actions .primary-button,
+.home-jobs-actions .secondary-button {
+  width: auto;
+  min-height: 42px;
+  margin: 0;
+  padding: 0 15px;
+  text-decoration: none;
+}
+
+.home-jobs-actions .secondary-button {
+  color: var(--paper);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 248, 232, 0.35);
+}
+
+.home-job-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.home-job-card {
+  min-height: 208px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--paper);
+  border-radius: 17px;
+}
+
+.home-job-card > span {
+  color: var(--purple);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-job-card > strong {
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.home-job-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 10px 0 14px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.home-job-card b {
+  margin-top: auto;
+  font-size: 15px;
+}
+
+.home-job-card small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.home-jobs-empty {
+  min-height: 150px;
+  margin-top: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: rgba(255, 248, 232, 0.7);
+  border: 1px dashed rgba(255, 248, 232, 0.35);
+  border-radius: 17px;
+  font-size: 12px;
+}
+
+.home-jobs-empty-link {
+  flex-direction: column;
+  color: var(--paper);
+  text-align: center;
+  text-decoration: none;
+}
+
+.home-jobs-empty-link span {
+  color: rgba(255, 248, 232, 0.66);
+}
+
+.home-jobs-empty-link em {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--acid);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .agent-console {
@@ -1247,6 +1425,7 @@ footer a:hover {
 @media (max-width: 720px) {
   .topbar,
   .dashboard,
+  .home-jobs,
   .trust-strip,
   footer {
     width: min(100% - 28px, 560px);
@@ -1301,6 +1480,10 @@ footer a:hover {
     font-size: 15px;
   }
 
+  .hero-product-actions {
+    margin: 20px 0 0;
+  }
+
   .hero-art {
     min-height: 330px;
     border-radius: 28px 28px 64px 28px;
@@ -1351,6 +1534,42 @@ footer a:hover {
   .agent-console {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .home-jobs {
+    margin-bottom: 42px;
+    padding: 22px 18px;
+    border-radius: 22px;
+    box-shadow: 5px 5px 0 var(--purple);
+  }
+
+  .home-jobs-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .home-jobs-heading h2 {
+    font-size: 28px;
+  }
+
+  .home-jobs-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-jobs-actions .primary-button,
+  .home-jobs-actions .secondary-button {
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .home-job-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-job-card {
+    min-height: 180px;
   }
 
   .agent-console-active {
