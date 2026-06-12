@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, CircleDollarSign } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function LegalPage({
   title,
@@ -17,10 +18,7 @@ export function LegalPage({
       </Link>
       <article className="legal-card">
         <div className="invoice-brand">
-          <span className="brand-mark">
-            <CircleDollarSign size={19} />
-          </span>
-          Payflow
+          <BrandLogo compact />
         </div>
         <h1>{title}</h1>
         <p className="legal-updated">Last updated {updated}</p>

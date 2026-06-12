@@ -5,7 +5,6 @@
 import {
   ArrowLeft,
   Check,
-  CircleDollarSign,
   LoaderCircle,
   LockKeyhole,
   ShieldCheck,
@@ -14,6 +13,7 @@ import {
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { payStablecoinInvoice } from "@/lib/payments";
 import { Invoice } from "@/lib/types";
 import { useMiniPay } from "@/hooks/useMiniPay";
@@ -130,10 +130,7 @@ export function PaymentCheckout() {
 
       <section className="checkout-card">
         <div className="invoice-brand">
-          <span className="brand-mark">
-            <CircleDollarSign size={19} />
-          </span>
-          Payflow
+          <BrandLogo compact />
         </div>
 
         {status === "confirmed" ? (

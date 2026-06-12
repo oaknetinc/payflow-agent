@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import {
   createUserAgent,
@@ -287,10 +288,7 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <Link className="brand" href="/">
-          <span className="brand-mark">
-            <CircleDollarSign size={21} strokeWidth={2.4} />
-          </span>
-          <span>Payflow</span>
+          <BrandLogo />
           <span className="agent-pill">agent</span>
         </Link>
         <div className="topbar-actions">
@@ -942,10 +940,7 @@ export default function Home() {
               <X size={18} />
             </button>
             <div className="invoice-brand">
-              <span className="brand-mark">
-                <CircleDollarSign size={19} />
-              </span>
-              Payflow
+              <BrandLogo compact />
             </div>
             <div className="invoice-amount">
               <span>Verified payment request</span>

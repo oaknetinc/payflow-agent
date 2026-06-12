@@ -5,7 +5,6 @@ import {
   Bot,
   BriefcaseBusiness,
   Check,
-  CircleDollarSign,
   Clock3,
   ExternalLink,
   FileCheck2,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { loadUserAgent } from "@/lib/agents";
 import {
@@ -209,10 +209,7 @@ export default function JobsPage() {
     <main className="jobs-shell">
       <header className="jobs-nav">
         <Link className="brand" href="/">
-          <span className="brand-mark">
-            <CircleDollarSign size={20} />
-          </span>
-          <span>Payflow</span>
+          <BrandLogo />
         </Link>
         <button
           className="wallet-button"

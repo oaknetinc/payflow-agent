@@ -67,7 +67,6 @@ button {
 .invoice-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   color: var(--ink);
   text-decoration: none;
   font-size: 20px;
@@ -75,16 +74,15 @@ button {
   letter-spacing: -0.04em;
 }
 
-.brand-mark {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  color: white;
-  background: var(--green);
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  box-shadow: 3px 3px 0 var(--acid);
+.brand-logo {
+  width: 152px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.brand-logo-compact {
+  width: 132px;
 }
 
 .agent-pill {
@@ -1309,11 +1307,6 @@ footer a:hover {
   font-size: 17px;
 }
 
-.invoice-brand .brand-mark {
-  width: 32px;
-  height: 32px;
-}
-
 .invoice-amount {
   margin: 34px 0;
   display: flex;
@@ -1615,6 +1608,10 @@ footer a:hover {
 
   .agent-pill {
     display: none;
+  }
+
+  .brand-logo {
+    width: 126px;
   }
 
   .wallet-button {

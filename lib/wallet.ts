@@ -27,7 +27,7 @@ export async function createWalletConnectProvider() {
       name: "Payflow Agent",
       description: "Create and pay verified stablecoin invoices on Celo.",
       url: window.location.origin,
-      icons: [`${window.location.origin}/logo.svg`],
+      icons: [`${window.location.origin}/payflow-icon.png`],
     },
     rpcMap: {
       42220:
